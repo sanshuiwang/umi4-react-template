@@ -10,10 +10,6 @@ export default {
     { path: "/", component: "home" },
     { path: "/docs", component: "docs" },
   ],
-  targets: {
-    ie: 11,
-    chrome: 80,
-  },
   theme: {},
   title: "Todo List",
   verifyCommit: {

@@ -48,10 +48,8 @@
    ```
 
 3. `clickToComponent` 浏览器中通过 Option+Click/Alt+Click 点击组件跳转至编辑器源码位置。默认为 'vscode'; 创建`src/components/TestClickToComponent/index.tsx` 全局容器组件
-4. `hash: true`开启 hash 模式，让 build 之后的产物包含 hash 后缀。通常用于增量发布和避免浏览器加载缓存
 
-5. `mock` 在 umi4 中默认开，所以我们给项目中添加一个 mock 文件夹，与 src 文件夹平级。就这样我们可以在前端开发阶段，先自己进行数据调试。(~~后续会讲：使用 umi 的 proxy，或者 axios 的 baseURL 进行前后端联调以及本地 mock 的切换~~)
-6. umi 默认会把 pages 下的文件自动转为动态路由； `routes: []` 可使用配置路由
+4. umi 默认会把 pages 下的文件自动转为动态路由； `routes: []` 可使用配置路由
 
 ```
 更改前：动态路由
@@ -78,10 +76,43 @@
    ],
 ```
 
-7. targets 配置需要兼容的浏览器最低版本。Umi 会根据这个自定引入 polyfill、配置 autoprefixer 和做语法转换等
-8. `theme: { '@primary-color': '#1DA57A' }` 配置 less 变量主题
-9. `title: "Todo List"` 配置全局页面 title，暂时只支持静态的 Title，可以看到浏览器 tab 名称为 Todo List; 如果切换页面想要更换当前的 title 则使用[Helmet](https://umijs.org/docs/api/api#helmet)，动态配置 head 中的标签，例如 title
-10. `verifyCommit` 对 git commit 提交信息进行验证
+5. `hash: true`开启 hash 模式，让 build 之后的产物包含 hash 后缀。通常用于增量发布和避免浏览器加载缓存
+
+```
+hash: false
+
+dist
+├── index.html
+├── layouts__index.async.js
+├── layouts__index.chunk.css
+├── p__docs__index.async.js
+├── p__home__index.async.js
+├── static
+│   └── yay.7d162f31.jpg
+└── umi.js
+```
+
+```
+hash: true
+
+dist
+├── index.html
+├── layouts__index.2c61ad52.async.js
+├── layouts__index.b6683f1c.chunk.css
+├── p__docs__index.f1083b94.async.js
+├── p__home__index.525b1b6f.async.js
+├── static
+│   └── yay.7d162f31.jpg
+└── umi.edb0cca7.js
+```
+
+6. `mock` 在 umi4 中默认开，所以我们给项目中添加一个 mock 文件夹，与 src 文件夹平级。就这样我们可以在前端开发阶段，先自己进行数据调试。(~~后续会讲：使用 umi 的 proxy，或者 axios 的 baseURL 进行前后端联调以及本地 mock 的切换~~)
+
+7. `theme: { '@primary-color': '#1DA57A' }` 配置 less 变量主题
+
+8. `title: "Todo List"` 配置全局页面 title，暂时只支持静态的 Title，可以看到浏览器 tab 名称为 Todo List; 如果切换页面想要更换当前的 title 则使用[Helmet](https://umijs.org/docs/api/api#helmet)，动态配置 head 中的标签，例如 title
+
+9. `verifyCommit` 对 git commit 提交信息进行验证。（发现问题：git commit 时，随意输入提交信息，居然成功 commit。）
 
 ```
    const path = require("path");
@@ -93,10 +124,6 @@
       clickToComponent: {},
       hash: true,
       routes: [],
-      targets: {
-         ie: 11,
-         chrome: 80,
-      },
       theme: {},
       title: "Todo List",
       verifyCommit: {

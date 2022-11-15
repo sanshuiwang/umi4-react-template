@@ -112,7 +112,10 @@ dist
 
 8. `title: "Todo List"` 配置全局页面 title，暂时只支持静态的 Title，可以看到浏览器 tab 名称为 Todo List; 如果切换页面想要更换当前的 title 则使用[Helmet](https://umijs.org/docs/api/api#helmet)，动态配置 head 中的标签，例如 title
 
-9. `verifyCommit` 对 git commit 提交信息进行验证。（发现问题：git commit 时，随意输入提交信息，居然成功 commit。）
+9. [verifyCommit](https://umijs.org/docs/api/config#verifycommit) 对 git commit 提交信息进行验证
+   > 发现问题：【刚配置时，我以为开箱即用呢！将在提交代码、信息，与 husky,commitlint 进行详细】
+   > git commit 时，随意输入提交信息，居然成功 commit
+   > 找到原因，需要在[.husky/commit-msg 配置](https://umijs.org/docs/api/commands#verifycommit)
 
 ```
    const path = require("path");

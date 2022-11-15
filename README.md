@@ -1,6 +1,6 @@
-# umi4 + ts
+# React 基于 umi 脚手架
 
-## 基于 umi 脚手架
+## umi4 + ts
 
 ---
 
@@ -25,7 +25,7 @@
 
 ---
 
-## 添加 umi 配置项
+## 先简单添加一些 umi 配置项
 
 > [配置](https://umijs.org/docs/api/config)
 
@@ -33,7 +33,7 @@
 
 ```
    export default {
-   npmClient: 'yarn'
+      npmClient: 'yarn'
    };
 ```
 
@@ -47,7 +47,41 @@
    新：import yayJpg from '@/assets/yay.jpg';
    ```
 
-3. clickToComponent 通过 Option+Click/Alt+Click 点击组件跳转至编辑器源码位置。默认为 'vscode'
+3. `clickToComponent` 浏览器中通过 Option+Click/Alt+Click 点击组件跳转至编辑器源码位置。默认为 'vscode'; 创建`src/components/TestClickToComponent/index.tsx` 全局容器组件
+4. `hash: true`开启 hash 模式，让 build 之后的产物包含 hash 后缀。通常用于增量发布和避免浏览器加载缓存
+
+5. `mock` 在 umi4 中默认开，所以我们给项目中添加一个 mock 文件夹，与 src 文件夹平级。就这样我们可以在前端开发阶段，先自己进行数据调试。(~~后续会讲：使用 umi 的 proxy，或者 axios 的 baseURL 进行前后端联调以及本地 mock 的切换~~)
+6. umi 默认会把 pages 下的文件自动转为动态路由； `routes: []` 可使用配置路由
+
+```
+更改前：动态路由
+│   └── pages
+│       ├── docs.tsx       // '/'
+│       ├── index.tsx      // '/docs'
+```
+
+```
+更改后：
+│   └── pages
+│       ├── docs
+│       │   └── index.tsx
+│       └── home
+│           └── index.tsx
+```
+
+> 配置路由
+
+```
+   routes: [
+      { path: "/", component: "home" },
+      { path: "/docs", component: "docs" },
+   ],
+```
+
+7. targets 配置需要兼容的浏览器最低版本。Umi 会根据这个自定引入 polyfill、配置 autoprefixer 和做语法转换等
+8. `theme: { '@primary-color': '#1DA57A' }` 配置 less 变量主题
+9. `title: "Todo List"` 配置全局页面 title，暂时只支持静态的 Title，可以看到浏览器 tab 名称为 Todo List; 如果切换页面想要更换当前的 title 则使用[Helmet](https://umijs.org/docs/api/api#helmet)，动态配置 head 中的标签，例如 title
+10. `verifyCommit` 对 git commit 提交信息进行验证
 
 ```
    const path = require("path");
@@ -57,8 +91,45 @@
          "@": path.resolve(__dirname, "src"),
       },
       clickToComponent: {},
+      hash: true,
+      routes: [],
+      targets: {
+         ie: 11,
+         chrome: 80,
+      },
+      theme: {},
+      title: "Todo List",
+      verifyCommit: {
+         scope: [
+            "feat",
+            "fix",
+            "docs",
+            "style",
+            "refactor",
+            "perf",
+            "test",
+            "workflow",
+            "build",
+            "ci",
+            "chore",
+            "types",
+            "wip",
+            "release",
+            "dep",
+            "deps",
+            "example",
+            "examples",
+            "merge",
+            "revert",
+         ],
+         allowEmoji: true,
+      },
    };
 ```
+
+> Tips:
+> umi4 的 history，默认值：`{ type: 'browser' }`。当然也可以使用 `{ type: 'hash' }`
+> 参考：1. [推荐使用 browserHistory](https://zhuanlan.zhihu.com/p/38592452) 2.[browserHistory 服务配置](https://react-guide.github.io/react-router-cn/docs/guides/basics/Histories.html)
 
 ---
 

@@ -1,5 +1,5 @@
 import yayJpg from "@/assets/yay.jpg";
-
+import TestClickToComponent from "@/components/TestClickToComponent";
 export default function HomePage() {
   return (
     <div>
@@ -10,6 +10,7 @@ export default function HomePage() {
       <p>
         To get started, edit <code>pages/index.tsx</code> and save to reload.
       </p>
+      <TestClickToComponent />
     </div>
   );
 }

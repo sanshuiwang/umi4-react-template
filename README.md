@@ -165,4 +165,45 @@ dist
 
 ## 编写 Todo List
 
-### 功能：增删
+> 包含：1. 登录 2.列表增删改
+> 技术：antd@4
+
+### UI 使用 `"antd": "^4.24.2"`
+
+1. 安装 antd
+
+```
+$ yarn add antd
+```
+
+2. 创建 app.ts，`src/app.ts`
+
+```
+import "antd/dist/antd.less";
+```
+
+3. [按需加载 antd 组件](https://ant.design/docs/react/getting-started-cn#%E6%8C%89%E9%9C%80%E5%8A%A0%E8%BD%BD)
+
+   > antd 默认支持基于 ES modules 的 tree shaking，对于 js 部分，直接引入 import { Button } from 'antd' 就会有按需加载的效果。如果你在开发环境的控制台看到下面的提示，那么你可能还在使用 webpack@1.x 或者 tree shaking 失效，请升级或检查相关配置。
+
+   ```
+      You are using a whole package of antd, please use https://www.npmjs.com/package/babel-plugin-import to reduce app bundle size.
+
+   ```
+
+4. antd 使用 TypeScript 进行书写并提供了完整的定义文件。（不要引用 @types/antd）
+
+### 登录实现
+
+1. UI 实现，创建`src/pages/login/index.tsx`。代码中引入 antd 组件，实现登录 UI
+2. 配置路由添加 login 页面
+
+```
+   routes: [
+      { path: "/", component: "home" },
+      { path: "/docs", component: "docs" },
+      { path: "/login", component: "login" },
+   ],
+```
+
+3. `http://localhost:8000/login` 浏览器访问登录页面呈现

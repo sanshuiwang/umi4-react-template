@@ -9,6 +9,7 @@ export default {
   routes: [
     { path: "/", component: "home" },
     { path: "/docs", component: "docs" },
+    { path: "/login", component: "login" },
   ],
   theme: {},
   title: "Todo List",

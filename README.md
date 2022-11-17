@@ -1,15 +1,13 @@
-# React 基于 umi 脚手架
-
-## umi4 + ts
+# umi4 + ts + antd@4 +
 
 ---
+
+## React 基于 umi 脚手架
 
 ### 环境准备
 
 - node v14.18.2
 - yarn 1.22.19
-
----
 
 ### 使用 yarn create umi[通过官方工具创建项目](https://umijs.org/docs/tutorials/getting-started#%E5%88%9B%E5%BB%BA%E9%A1%B9%E7%9B%AE)
 
@@ -29,7 +27,9 @@
 
 > [配置](https://umijs.org/docs/api/config)
 
-1. 创建项目后，.umirc.ts 自动生成内容
+1. 配置文件添加提示功能
+
+2. 创建项目后，.umirc.ts 自动生成内容
 
 ```
    export default {
@@ -37,7 +37,7 @@
    };
 ```
 
-2. alias 配置别名，对 import 语句的 source 做映射
+3. alias 配置别名，对 import 语句的 source 做映射
 
    > 代码 import 引入资源路径变化
 
@@ -47,9 +47,9 @@
    新：import yayJpg from '@/assets/yay.jpg';
    ```
 
-3. `clickToComponent` 浏览器中通过 Option+Click/Alt+Click 点击组件跳转至编辑器源码位置。默认为 'vscode'; 创建`src/components/TestClickToComponent/index.tsx` 全局容器组件
+4. `clickToComponent` 浏览器中通过 Option+Click/Alt+Click 点击组件跳转至编辑器源码位置。默认为 'vscode'; 创建`src/components/TestClickToComponent/index.tsx` 全局容器组件
 
-4. umi 默认会把 pages 下的文件自动转为动态路由； `routes: []` 可使用配置路由
+5. umi 默认会把 pages 下的文件自动转为动态路由； `routes: []` 可使用配置路由
 
 ```
 更改前：动态路由
@@ -76,7 +76,7 @@
    ],
 ```
 
-5. `hash: true`开启 hash 模式，让 build 之后的产物包含 hash 后缀。通常用于增量发布和避免浏览器加载缓存
+6. `hash: true`开启 hash 模式，让 build 之后的产物包含 hash 后缀。通常用于增量发布和避免浏览器加载缓存
 
 ```
 hash: false
@@ -106,20 +106,24 @@ dist
 └── umi.edb0cca7.js
 ```
 
-6. `mock` 在 umi4 中默认开，所以我们给项目中添加一个 mock 文件夹，与 src 文件夹平级。就这样我们可以在前端开发阶段，先自己进行数据调试。(~~后续会讲：使用 umi 的 proxy，或者 axios 的 baseURL 进行前后端联调以及本地 mock 的切换~~)
+7. `mock` 在 umi4 中默认开，所以我们给项目中添加一个 mock 文件夹，与 src 文件夹平级。就这样我们可以在前端开发阶段，先自己进行数据调试。(~~后续会讲：使用 umi 的 proxy，或者 axios 的 baseURL 进行前后端联调以及本地 mock 的切换~~)
 
-7. `theme: { '@primary-color': '#1DA57A' }` 配置 less 变量主题
+8. `theme: { '@primary-color': '#1DA57A' }` 配置 less 变量主题
 
-8. `title: "Todo List"` 配置全局页面 title，暂时只支持静态的 Title，可以看到浏览器 tab 名称为 Todo List; 如果切换页面想要更换当前的 title 则使用[Helmet](https://umijs.org/docs/api/api#helmet)，动态配置 head 中的标签，例如 title
+9. `title: "Todo List"` 配置全局页面 title，暂时只支持静态的 Title，可以看到浏览器 tab 名称为 Todo List; 如果切换页面想要更换当前的 title 则使用[Helmet](https://umijs.org/docs/api/api#helmet)，动态配置 head 中的标签，例如 title
 
-9. [verifyCommit](https://umijs.org/docs/api/config#verifycommit) 对 git commit 提交信息进行验证
-   > 发现问题：【刚配置时，我以为开箱即用呢！将在提交代码、信息，与 husky,commitlint 进行详细】
-   > git commit 时，随意输入提交信息，居然成功 commit
-   > 找到原因，需要在[.husky/commit-msg 配置](https://umijs.org/docs/api/commands#verifycommit)
+10. [verifyCommit](https://umijs.org/docs/api/config#verifycommit) 对 git commit 提交信息进行验证
+
+> 发现问题：【刚配置时，我以为开箱即用呢！将在提交代码、信息，与 husky,commitlint 进行详细】
+> git commit 时，随意输入提交信息，居然成功 commit
+> 找到原因，需要在[.husky/commit-msg 配置](https://umijs.org/docs/api/commands#verifycommit)
 
 ```
+// .umirc.ts
+
+   import { defineConfig } from 'umi';
    const path = require("path");
-   export default {
+   export default defineConfig({
       npmClient: "yarn",
       alias: {
          "@": path.resolve(__dirname, "src"),
@@ -154,7 +158,7 @@ dist
          ],
          allowEmoji: true,
       },
-   };
+   });
 ```
 
 > Tips:
@@ -166,7 +170,7 @@ dist
 ## 编写 Todo List
 
 > 包含：1. 登录 2.列表增删改
-> 技术：antd@4
+> 技术：antd@4 + loading.tsx + 白屏解决方案
 
 ### UI 使用 `"antd": "^4.24.2"`
 
@@ -193,12 +197,18 @@ import "antd/dist/antd.less";
 
 4. antd 使用 TypeScript 进行书写并提供了完整的定义文件。（不要引用 @types/antd）
 
+---
+
 ### 登录实现
 
 1. UI 实现，创建`src/pages/login/index.tsx`。代码中引入 antd 组件，实现登录 UI
 2. 配置路由添加 login 页面
 
+   > Umi 4 默认根据路由来进行 JavaScript 模块按需加载。
+   > 如果需要在路由组件加载的过程中配置自定义加载组件，在项目 src 目录下创建 loading.tsx 或者 loading.jsx 或者 loading.js 文件，默认导出的组件会在组件加载的时候渲染。
+
 ```
+// .umirc.ts
    routes: [
       { path: "/", component: "home" },
       { path: "/docs", component: "docs" },
@@ -207,3 +217,16 @@ import "antd/dist/antd.less";
 ```
 
 3. `http://localhost:8000/login` 浏览器访问登录页面呈现
+
+4. 创建 `src/loading.tsx`
+
+   > 可以在 Chrome 的调试工具的网络 tab 中将网络设置成低速，然后切换路由查看动态加载中组件的展示。
+   > 如下图:
+   >
+   > 1. 在 network 调为 slow 3G
+   > 2. 我们查看到 root 节点下具备当前登录也元素
+   > 3. 点击浏览器左上角刷新`http://localhost:8000/login`
+   > 4. 我们看到页面刷新时，root 节点下没有了任何元素，导致出现白屏【白屏问题也可以解决，稍后讲解】
+   > 5. 在加载到组件之前 loading.tsx 在页面中显现出来
+
+～～～补充录屏～～～

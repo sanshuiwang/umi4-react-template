@@ -1,5 +1,6 @@
+import { defineConfig } from "umi";
 const path = require("path");
-export default {
+export default defineConfig({
   npmClient: "yarn",
   alias: {
     "@": path.resolve(__dirname, "src"),
@@ -38,4 +39,4 @@ export default {
     ],
     allowEmoji: true,
   },
-};
+});

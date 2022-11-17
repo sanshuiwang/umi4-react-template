@@ -1,20 +1,36 @@
 import { Fragment, FC } from "react";
-import { Button, Form, Input } from "antd";
+import { compose } from "redux";
+import { connect } from "umi";
+import { Button, Form, Input, message } from "antd";
+
 import styles from "./index.less";
 
 function Login() {
+  const [loginForm] = Form.useForm();
+
   const onFinish = (values: any) => {
     console.log("Success:", values);
+    loginForm
+      .validateFields()
+      .then((values) => {
+        /**
+         * 向API发送请求
+         */
+      })
+      .catch((errorInfo) => {
+        message.error(errorInfo);
+      });
   };
 
   const onFinishFailed = (errorInfo: any) => {
-    console.log("Failed:", errorInfo);
+    message.error("Login Error!");
   };
 
   return (
     <Fragment>
       <main className={styles.mainForm}>
         <Form
+          form={loginForm}
           name="loginForm"
           onFinish={onFinish}
           onFinishFailed={onFinishFailed}
@@ -29,7 +45,7 @@ function Login() {
               {
                 required: true,
                 message: "Please input your username!",
-                len: 50,
+                max: 50,
               },
             ]}
           >
@@ -42,7 +58,7 @@ function Login() {
               {
                 required: true,
                 message: "Please input your password!",
-                len: 50,
+                max: 50,
               },
             ]}
           >
@@ -59,5 +75,28 @@ function Login() {
     </Fragment>
   );
 }
+const mapStateToProps = ({ loading }: any) => ({
+  loading,
+});
 
-export default Login;
+const mapDispatchToProps = (dispatch: Function) => ({
+  getUsers: (params: object) => {
+    dispatch({
+      type: `loginModel/getUsers`,
+      payload: {
+        ...params,
+      },
+    });
+  },
+  updateState: (params: object) => {
+    dispatch({
+      type: `loginModel/updateState`,
+      payload: {
+        ...params,
+      },
+    });
+  },
+});
+const enhance = compose(connect(mapStateToProps, mapDispatchToProps));
+
+export default enhance(Login);

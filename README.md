@@ -27,14 +27,19 @@
 
 > [配置](https://umijs.org/docs/api/config)
 
-1. 配置文件添加提示功能
-
-2. 创建项目后，.umirc.ts 自动生成内容
+1. 创建项目后，.umirc.ts 自动生成内容
 
 ```
    export default {
       npmClient: 'yarn'
    };
+```
+
+2. 配置文件添加提示功能
+
+```
+// .umirc.ts
+import { defineConfig } from 'umi';
 ```
 
 3. alias 配置别名，对 import 语句的 source 做映射
@@ -113,10 +118,9 @@ dist
 9. `title: "Todo List"` 配置全局页面 title，暂时只支持静态的 Title，可以看到浏览器 tab 名称为 Todo List; 如果切换页面想要更换当前的 title 则使用[Helmet](https://umijs.org/docs/api/api#helmet)，动态配置 head 中的标签，例如 title
 
 10. [verifyCommit](https://umijs.org/docs/api/config#verifycommit) 对 git commit 提交信息进行验证
-
-> 发现问题：【刚配置时，我以为开箱即用呢！将在提交代码、信息，与 husky,commitlint 进行详细】
-> git commit 时，随意输入提交信息，居然成功 commit
-> 找到原因，需要在[.husky/commit-msg 配置](https://umijs.org/docs/api/commands#verifycommit)
+    > 发现问题：【刚配置时，我以为开箱即用呢！后续将在提交代码、信息，与 husky,commitlint 进行详细】
+    > git commit 时，随意输入提交信息，居然成功 commit
+    > 找到原因，需要在[.husky/commit-msg 配置](https://umijs.org/docs/api/commands#verifycommit)
 
 ```
 // .umirc.ts
@@ -197,8 +201,6 @@ import "antd/dist/antd.less";
 
 4. antd 使用 TypeScript 进行书写并提供了完整的定义文件。（不要引用 @types/antd）
 
----
-
 ### 登录实现
 
 1. UI 实现，创建`src/pages/login/index.tsx`。代码中引入 antd 组件，实现登录 UI
@@ -230,3 +232,10 @@ import "antd/dist/antd.less";
    > 5. 在加载到组件之前 loading.tsx 在页面中显现出来
 
 ～～～补充录屏～～～
+
+5. 触发 submit 事件, `src/pages/login/index.tsx` 通过 Form 检验后执行 onFinish()
+
+```
+    "axios": "^1.1.3",
+    "safe-reaper": "^2.1.0",
+```

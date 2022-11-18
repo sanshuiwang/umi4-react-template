@@ -11,6 +11,11 @@
 
 ### 使用 yarn create umi[通过官方工具创建项目](https://umijs.org/docs/tutorials/getting-started#%E5%88%9B%E5%BB%BA%E9%A1%B9%E7%9B%AE)
 
+> 执行过程中会让用户做出资源选择，咱们选择如下：
+> ✔ Pick Umi App Template › Simple App
+> ✔ Pick Npm Client › yarn
+> ✔ Pick Npm Registry › taobao
+
 1. 官方 create，帮助开发者初始化创建 git, 用户选择 yarn,taobao
 2. 查看 `package.json` 当前 umi 版本：`"umi": "^4.0.30"`
 3. 创建完毕后，我们可自己手动添加.yarnrc 同时指向淘宝源
@@ -111,16 +116,14 @@ dist
 └── umi.edb0cca7.js
 ```
 
-7. `mock` 在 umi4 中默认开，所以我们给项目中添加一个 mock 文件夹，与 src 文件夹平级。就这样我们可以在前端开发阶段，先自己进行数据调试。(~~后续会讲：使用 umi 的 proxy，或者 axios 的 baseURL 进行前后端联调以及本地 mock 的切换~~)
+7. `theme: { '@primary-color': '#1DA57A' }` 配置 less 变量主题
 
-8. `theme: { '@primary-color': '#1DA57A' }` 配置 less 变量主题
+8. `title: "Todo List"` 配置全局页面 title，暂时只支持静态的 Title，可以看到浏览器 tab 名称为 Todo List; 如果切换页面想要更换当前的 title 则使用[Helmet](https://umijs.org/docs/api/api#helmet)，动态配置 head 中的标签，例如 title
 
-9. `title: "Todo List"` 配置全局页面 title，暂时只支持静态的 Title，可以看到浏览器 tab 名称为 Todo List; 如果切换页面想要更换当前的 title 则使用[Helmet](https://umijs.org/docs/api/api#helmet)，动态配置 head 中的标签，例如 title
-
-10. [verifyCommit](https://umijs.org/docs/api/config#verifycommit) 对 git commit 提交信息进行验证
-    > 发现问题：【刚配置时，我以为开箱即用呢！后续将在提交代码、信息，与 husky,commitlint 进行详细】
-    > git commit 时，随意输入提交信息，居然成功 commit
-    > 找到原因，需要在[.husky/commit-msg 配置](https://umijs.org/docs/api/commands#verifycommit)
+9. [verifyCommit](https://umijs.org/docs/api/config#verifycommit) 对 git commit 提交信息进行验证
+   > 发现问题：【刚配置时，我以为开箱即用呢！后续将在提交代码、信息，与 husky,commitlint 进行详细】
+   > git commit 时，随意输入提交信息，居然成功 commit
+   > 找到原因，需要在[.husky/commit-msg 配置](https://umijs.org/docs/api/commands#verifycommit)
 
 ```
 // .umirc.ts
@@ -204,6 +207,7 @@ import "antd/dist/antd.less";
 ### 登录实现
 
 1. UI 实现，创建`src/pages/login/index.tsx`。代码中引入 antd 组件，实现登录 UI
+
 2. 配置路由添加 login 页面
 
    > Umi 4 默认根据路由来进行 JavaScript 模块按需加载。
@@ -220,7 +224,7 @@ import "antd/dist/antd.less";
 
 3. `http://localhost:8000/login` 浏览器访问登录页面呈现
 
-4. 创建 `src/loading.tsx`
+4. 我们发现在加载组件时，页面空白，什么也没有，所以我们创建 `src/loading.tsx`，让页面呈现组件加载动画
 
    > 可以在 Chrome 的调试工具的网络 tab 中将网络设置成低速，然后切换路由查看动态加载中组件的展示。
    > 如下图:
@@ -229,13 +233,113 @@ import "antd/dist/antd.less";
    > 2. 我们查看到 root 节点下具备当前登录也元素
    > 3. 点击浏览器左上角刷新`http://localhost:8000/login`
    > 4. 我们看到页面刷新时，root 节点下没有了任何元素，导致出现白屏【白屏问题也可以解决，稍后讲解】
-   > 5. 在加载到组件之前 loading.tsx 在页面中显现出来
+   > 5. 当看到与 root 节点同级出现 floating-ui-root 元素, 说明正在进行组件加载，同时看到 loading.tsx 在页面中显现出来
 
-～～～补充录屏～～～
+   ![loadingTsxGif](./readme-source/umi-loadingtsx.gif "loadingTsxGif")
 
-5. 触发 submit 事件, `src/pages/login/index.tsx` 通过 Form 检验后执行 onFinish()
+5. 在`src/pages/login/index.tsx`触发 submit 事件, username 和 password 通过验证后，要把数据提交给后端服务器处理。我们就需要 Effect 进行与后端的异步通讯，创建下方文件发送 getUsers 请求：
 
-```
-    "axios": "^1.1.3",
-    "safe-reaper": "^2.1.0",
-```
+   > `src/pages/login/model.ts` LoginModel 作为 login 当前局部 model
+   > `src/utils/dva.ts` 新建 utils 文件夹作为全局的工具，`dva.ts`为所有 model 文件继承一些共用属性, `例：reducers中updateState()` 更新 state 方法
+   > `src/services/login.ts` 新建 services 文件夹为整个项目的后端 API 服务，`login.ts`为 login 相关 API 服务
+   > `src/utils/request/api.ts` 使用 axios 实现项目 request API 与后端服务通讯
+   > `src/utils/env.ts` 作为项目 环境常量 声明文件
+   > 安装使用到的第三方插件：
+
+   ```
+      $ yarn add axios
+      $ yarn add safe-reaper
+
+      // package.json
+      "dependencies": {
+         "antd": "^4.24.2",
+      +  "axios": "^1.1.3",
+      +  "safe-reaper": "^2.1.0",
+         "umi": "^4.0.30"
+      },
+   ```
+
+   > 配置 dva
+
+   ```
+   // .umirc.ts
+   import { defineConfig } from "umi";
+   const path = require("path");
+   export default defineConfig({
+      ...,
+      dva: {},
+   });
+   ```
+
+6. 执行`yarn start`，报出下方问题 1
+   同时也会发现`src/pages/login/index.tsx`文件中提示错误 1&2
+
+   ```
+   // 问题1
+   fatal - AssertionError [ERR_ASSERTION]: Invalid config keys: dva
+      at Function.validateConfig (/Users/gaoyali-iris/Documents/umi4-project/umi4-react-template/node_modules/@umijs/core/dist/config/config.js:182:31)
+      at Config.getConfig (/Users/gaoyali-iris/Documents/umi4-project/umi4-react-template/node_modules/@umijs/core/dist/config/config.js:60:12)
+      at Service.resolveConfig (/Users/gaoyali-iris/Documents/umi4-project/umi4-react-template/node_modules/@umijs/core/dist/service/service.js:286:97)
+      at Service.run (/Users/gaoyali-iris/Documents/umi4-project/umi4-react-template/node_modules/@umijs/core/dist/service/service.js:235:50)
+      at processTicksAndRejections (internal/process/task_queues.js:95:5)
+      at async Service.run2 (/Users/gaoyali-iris/Documents/umi4-project/umi4-react-template/node_modules/umi/dist/service/service.js:58:12)
+      at async Object.run (/Users/gaoyali-iris/Documents/umi4-project/umi4-react-template/node_modules/umi/dist/cli/cli.js:55:7) {
+   generatedMessage: false,
+   code: 'ERR_ASSERTION',
+   actual: false,
+   expected: true,
+   operator: '=='
+   ```
+
+   ```
+   // 错误1：
+   Can not find 'redux'
+   // 错误2：
+   Module '"umi"' has no exported member 'connect'.ts(2305)
+   ```
+
+7. 由于我们使用的 umi4 在`node_modules/@umijs`下是没有 plugins 文件夹的，并且也不存在 dva ，这要怎么处理呢？网上翻了一大圈，发现 umi 提供了最佳方法，(DvaJS 配置生成器)[https://umijs.org/docs/guides/generator#dvajs-%E9%85%8D%E7%BD%AE%E7%94%9F%E6%88%90%E5%99%A8] 需要执行`umi g dva` 开启 dva
+
+   ```
+   // package.json
+   {
+      ...,
+      "scripts": {
+         "dev": "umi dev",
+         "build": "umi build --clean",
+         "postinstall": "umi setup",
+         "setup": "umi setup",
+         "start": "npm run dev",
+      +  "umi:g:dva": "umi g dva"
+      },
+   }
+
+   $ yarn umi:g:dva
+
+   // 执行命令后
+   生成一个新的全局model文件：src/models/count.ts
+   // .umirc.ts自动开启配置dva: {}
+   import { defineConfig } from "umi";
+   const path = require("path");
+   export default defineConfig({
+      ...,
+      dva: {},
+      plugins: ["@umijs/plugins/dist/dva"],
+   });
+   // package.json 自动加入@umijs/plugins
+   "devDependencies": {
+     "@types/react": "^18.0.0",
+     "@types/react-dom": "^18.0.0",
+     "typescript": "^4.1.2",
+   + "@umijs/plugins": "^4.0.30"
+   }
+
+   $ yarn start
+
+   // 项目可以正常启动访问啦！！！http://localhost:8000/login
+
+   // 再查看`src/pages/login/index.tsx`发现还会有错误2
+   // 关闭退出vscode, 重新打开后，解决问题
+   ```
+
+8. `mock` 在 umi4 中默认开，所以我们给项目中添加一个 mock 文件夹，与 src 文件夹平级。就这样我们可以在前端开发阶段，先自己进行数据调试。(~~后续会讲：使用 umi 的 proxy，或者 axios 的 baseURL 进行前后端联调以及本地 mock 的切换~~)

@@ -39,4 +39,6 @@ export default defineConfig({
     ],
     allowEmoji: true,
   },
+  dva: {},
+  plugins: ["@umijs/plugins/dist/dva"],
 });

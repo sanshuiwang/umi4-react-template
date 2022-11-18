@@ -1,4 +1,4 @@
-import { Fragment, FC } from "react";
+import { Fragment } from "react";
 import { compose } from "redux";
 import { connect } from "umi";
 import { Button, Form, Input, message } from "antd";

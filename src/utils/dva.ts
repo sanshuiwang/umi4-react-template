@@ -1,9 +1,33 @@
-export function withMixin(model: any) {
+import { Effect } from "umi";
+import { Reducer } from "redux";
+
+interface IModel {
+  namespace?: string;
+  state: {
+    [propName: string]: any;
+  };
+  subscriptions: {
+    [propName: string]: Function;
+  };
+  effects: {
+    [propName: string]: Effect;
+  };
+  reducers: {
+    [propName: string]: Reducer;
+  };
+}
+
+export function withMixin(model: IModel) {
   if (!model) {
     throw new Error("model cannot be empty");
   }
 
-  const mixed: any = {};
+  let mixed: IModel = {
+    state: {},
+    subscriptions: {},
+    effects: {},
+    reducers: {},
+  };
 
   if (model.namespace) {
     mixed.namespace = model.namespace;

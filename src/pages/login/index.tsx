@@ -4,22 +4,16 @@ import { connect } from "umi";
 import { Button, Form, Input, message } from "antd";
 
 import styles from "./index.less";
+interface IProps {
+  getUsers: Function;
+}
 
-function Login() {
-  const [loginForm] = Form.useForm();
+function Login(props: IProps) {
+  const { getUsers } = props;
 
   const onFinish = (values: any) => {
     console.log("Success:", values);
-    loginForm
-      .validateFields()
-      .then((values) => {
-        /**
-         * 向API发送请求
-         */
-      })
-      .catch((errorInfo) => {
-        message.error(errorInfo);
-      });
+    getUsers(values);
   };
 
   const onFinishFailed = (errorInfo: any) => {
@@ -30,7 +24,6 @@ function Login() {
     <Fragment>
       <main className={styles.mainForm}>
         <Form
-          form={loginForm}
           name="loginForm"
           onFinish={onFinish}
           onFinishFailed={onFinishFailed}
@@ -75,6 +68,7 @@ function Login() {
     </Fragment>
   );
 }
+
 const mapStateToProps = ({ loading }: any) => ({
   loading,
 });
@@ -82,7 +76,7 @@ const mapStateToProps = ({ loading }: any) => ({
 const mapDispatchToProps = (dispatch: Function) => ({
   getUsers: (params: object) => {
     dispatch({
-      type: `loginModel/getUsers`,
+      type: `login/getUsers`,
       payload: {
         ...params,
       },
@@ -90,7 +84,7 @@ const mapDispatchToProps = (dispatch: Function) => ({
   },
   updateState: (params: object) => {
     dispatch({
-      type: `loginModel/updateState`,
+      type: `login/updateState`,
       payload: {
         ...params,
       },

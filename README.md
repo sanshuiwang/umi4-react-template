@@ -239,11 +239,11 @@ import "antd/dist/antd.less";
 
 5. 在`src/pages/login/index.tsx`触发 submit 事件, username 和 password 通过验证后，要把数据提交给后端服务器处理。我们就需要 Effect 进行与后端的异步通讯，创建下方文件发送 getUsers 请求：
 
-   > `src/pages/login/model.ts` LoginModel 作为 login 当前局部 model
-   > `src/utils/dva.ts` 新建 utils 文件夹作为全局的工具，`dva.ts`为所有 model 文件继承一些共用属性, `例：reducers中updateState()` 更新 state 方法
+   > `src/pages/login/model.ts` 作为 login 当前局部 model
    > `src/services/login.ts` 新建 services 文件夹为整个项目的后端 API 服务，`login.ts`为 login 相关 API 服务
    > `src/utils/request/api.ts` 使用 axios 实现项目 request API 与后端服务通讯
    > `src/utils/env.ts` 作为项目 环境常量 声明文件
+   > `src/utils/dva.ts` 新建 utils 文件夹作为全局的工具，`dva.ts`为所有 model 文件继承一些共用属性, `例：reducers中updateState()` 更新 state 方法; 引用 withMixin 后，无法 dispatch 到 effect 中异步方法。【目前没有找到原因】
    > 安装使用到的第三方插件：
 
    ```

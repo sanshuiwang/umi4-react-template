@@ -1,21 +1,40 @@
 import { reap } from "safe-reaper";
-
+import { Effect } from "umi";
+import { Reducer } from "redux";
 import { withMixin } from "@/utils/dva";
 import { getUsers } from "@/services/login";
 import { message } from "antd";
+import { AxiosResponse } from "axios";
 
-export default withMixin({
-  namespace: "loginModel",
-  state: {},
+interface IModel {
+  namespace?: string;
+  state: {
+    [propName: string]: any;
+  };
+  subscriptions: {
+    [propName: string]: Function;
+  };
   effects: {
-    *getUsers({ payload }: any, { put, call, select }: any): Generator<any> {
-      debugger;
+    [propName: string]: Effect;
+  };
+  reducers: {
+    [propName: string]: Reducer;
+  };
+}
+
+const login: IModel = {
+  namespace: "login",
+  state: {
+    userInfo: {},
+  },
+  subscriptions: {},
+  effects: {
+    *getUsers({ payload }: any, { put, call, select }: any) {
       try {
-        const res: any = yield call(getUsers, payload);
-        const code: number = reap(res, "code", 0);
-        if (code !== 200) {
-          return message.error("失败");
-        }
+        const res: Promise<AxiosResponse<any, any>> = yield call(
+          getUsers,
+          payload
+        );
 
         return res;
       } catch (error) {
@@ -23,5 +42,15 @@ export default withMixin({
       }
     },
   },
-  reducers: {},
-});
+  reducers: {
+    // 更新状态
+    updateState(state: any, { payload }: any) {
+      return {
+        ...state,
+        ...payload,
+      };
+    },
+  },
+};
+
+export default login;

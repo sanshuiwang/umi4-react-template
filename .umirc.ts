@@ -39,6 +39,6 @@ export default defineConfig({
     ],
     allowEmoji: true,
   },
-  dva: {},
+  dva: { immer: {}, extraModels: [] },
   plugins: ["@umijs/plugins/dist/dva"],
 });

@@ -9,6 +9,11 @@
 - node v14.18.2
 - yarn 1.22.19
 
+> 必看：
+>
+> 1. [umi 环境要求](https://umijs.org/docs/introduce/introduce#%E4%BB%80%E4%B9%88%E6%97%B6%E5%80%99%E4%B8%8D%E7%94%A8-umi)
+> 2. [antd@4 兼容环境](https://4x.ant.design/docs/react/introduce-cn#%E5%85%BC%E5%AE%B9%E7%8E%AF%E5%A2%83)
+
 ### 使用 yarn create umi[通过官方工具创建项目](https://umijs.org/docs/tutorials/getting-started#%E5%88%9B%E5%BB%BA%E9%A1%B9%E7%9B%AE)
 
 > 执行过程中会让用户做出资源选择，咱们选择如下：
@@ -453,12 +458,23 @@ import "antd/dist/antd.less";
     history.push("/todo");
     ```
 
+12. 登录页进入 todo 时，由于点击 submit 后接口响应需要 2.02s，login 页面需要静止一会才能跳转到 todo
+    ![loadingLogin](./readme-source/loading-login.png "loadingLogin")
+
+    处理办法：加登录 loading 状态
+
+    ```
+    //src/pages/login/index.tsx
+    const mapStateToProps = ({ loading }: any) => ({
+      isLoading: loading.effects["login/getUsers"] || false,
+    });
+    ```
+
 ### Todo 实现
 
-1. 新建`src/pages/todo`的 model\tsx，新建`src/services/todo.ts`API, 具体代码查看这两个文件夹，不做具体写作讲解
+1. 新建`src/pages/todo`的 tsx、model，新建`src/services/todo.ts`的 API, 具体代码查看这两个文件夹，不做具体写作讲解，会讲解写作时，发现的问题
 
 > 问题：
-> 登录页进入 todo 时：由于 submit 后接口反应慢，login 页面需要静止一会才能跳转到 todo，会造成误以为登录坏了。处理办法：加登录 loading 状态
 > todo 页面刷新，用户名为 null, 原因：刷掉 userInfo store 数据
 
 ---

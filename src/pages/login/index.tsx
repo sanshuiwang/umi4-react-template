@@ -5,11 +5,12 @@ import { Button, Form, Input, message } from "antd";
 
 import styles from "./index.less";
 interface IProps {
+  isLoading: boolean;
   getUsers: Function;
 }
 
 function Login(props: IProps) {
-  const { getUsers } = props;
+  const { getUsers, isLoading } = props;
 
   const onFinish = (values: any) => {
     console.log("Success:", values);
@@ -59,7 +60,7 @@ function Login(props: IProps) {
           </Form.Item>
 
           <Form.Item>
-            <Button type="primary" htmlType="submit" block>
+            <Button loading={isLoading} type="primary" htmlType="submit" block>
               Submit
             </Button>
           </Form.Item>
@@ -70,7 +71,7 @@ function Login(props: IProps) {
 }
 
 const mapStateToProps = ({ loading }: any) => ({
-  loading,
+  isLoading: loading.effects["login/getUsers"] || false,
 });
 
 const mapDispatchToProps = (dispatch: Function) => ({

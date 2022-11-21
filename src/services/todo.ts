@@ -1,8 +1,8 @@
 import API from "@/utils/request";
 
-export function getUsers(payload: object) {
+export function getTodos(payload: object) {
   return API({
-    url: "/api/users/1",
+    url: "/api/todos",
     method: "get",
     params: payload,
   });

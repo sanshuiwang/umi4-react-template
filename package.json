@@ -3,11 +3,13 @@
   "author": "sanshuiwang <768188667@qq.com>",
   "scripts": {
     "dev": "umi dev",
+    "dev:no-mock": "MOCK=none umi dev",
     "build": "umi build --clean",
     "postinstall": "umi setup",
     "setup": "umi setup",
     "start": "npm run dev",
-    "umi:g:dva": "umi g dva"
+    "umi:g:dva": "umi g dva",
+    "umi:g:mock": "umi g mock"
   },
   "dependencies": {
     "antd": "^4.24.2",

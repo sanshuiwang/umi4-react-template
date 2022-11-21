@@ -1,4 +1,4 @@
-# umi4 + ts + antd@4 +
+# umi4 + antd@4 + dva + mock + proxy
 
 ---
 
@@ -52,6 +52,7 @@ import { defineConfig } from 'umi';
    > 代码 import 引入资源路径变化
 
    ```
+   // src/pages/home/index.tsx
    旧：import yayJpg from '../assets/yay.jpg';
 
    新：import yayJpg from '@/assets/yay.jpg';
@@ -176,8 +177,8 @@ dist
 
 ## 编写 Todo List
 
-> 包含：1. 登录 2.列表增删改
-> 技术：antd@4 + loading.tsx + 白屏解决方案
+> 包含：1. 登录 2. 列表增删改
+> 技术：antd@4 + @umijs/plugins + dva + mock + proxy + loading.tsx + 白屏解决方案
 
 ### UI 使用 `"antd": "^4.24.2"`
 
@@ -222,124 +223,242 @@ import "antd/dist/antd.less";
    ],
 ```
 
-3. `http://localhost:8000/login` 浏览器访问登录页面呈现
+3.  `http://localhost:8000/login` 浏览器访问登录页面呈现
 
-4. 我们发现在加载组件时，页面空白，什么也没有，所以我们创建 `src/loading.tsx`，让页面呈现组件加载动画
+4.  我们发现在加载组件时，页面空白，什么也没有，所以我们创建 `src/loading.tsx`，让页面呈现组件加载动画
 
-   > 可以在 Chrome 的调试工具的网络 tab 中将网络设置成低速，然后切换路由查看动态加载中组件的展示。
-   > 如下图:
-   >
-   > 1. 在 network 调为 slow 3G
-   > 2. 我们查看到 root 节点下具备当前登录也元素
-   > 3. 点击浏览器左上角刷新`http://localhost:8000/login`
-   > 4. 我们看到页面刷新时，root 节点下没有了任何元素，导致出现白屏【白屏问题也可以解决，稍后讲解】
-   > 5. 当看到与 root 节点同级出现 floating-ui-root 元素, 说明正在进行组件加载，同时看到 loading.tsx 在页面中显现出来
+    > 可以在 Chrome 的调试工具的网络 tab 中将网络设置成低速，然后切换路由查看动态加载中组件的展示。
+    > 如下图:
+    >
+    > 1. 在 network 调为 slow 3G
+    > 2. 我们查看到 root 节点下具备当前登录也元素
+    > 3. 点击浏览器左上角刷新`http://localhost:8000/login`
+    > 4. 我们看到页面刷新时，root 节点下没有了任何元素，导致出现白屏【白屏问题也可以解决，稍后讲解】
+    > 5. 当看到与 root 节点同级出现 floating-ui-root 元素, 说明正在进行组件加载，同时看到 loading.tsx 在页面中显现出来
 
-   ![loadingTsxGif](./readme-source/umi-loadingtsx.gif "loadingTsxGif")
+    ![loadingTsxGif](./readme-source/umi-loadingtsx.gif "loadingTsxGif")
 
-5. 在`src/pages/login/index.tsx`触发 submit 事件, username 和 password 通过验证后，要把数据提交给后端服务器处理。我们就需要 Effect 进行与后端的异步通讯，创建下方文件发送 getUsers 请求：
+5.  在`src/pages/login/index.tsx`触发 submit 事件, username 和 password 通过验证后，要把数据提交给后端服务器处理。我们就需要 Effect 进行与后端的异步通讯，创建下方文件发送 getUsers 请求：
 
-   > `src/pages/login/model.ts` 作为 login 当前局部 model
-   > `src/services/login.ts` 新建 services 文件夹为整个项目的后端 API 服务，`login.ts`为 login 相关 API 服务
-   > `src/utils/request/api.ts` 使用 axios 实现项目 request API 与后端服务通讯
-   > `src/utils/env.ts` 作为项目 环境常量 声明文件
-   > `src/utils/dva.ts` 新建 utils 文件夹作为全局的工具，`dva.ts`为所有 model 文件继承一些共用属性, `例：reducers中updateState()` 更新 state 方法; 引用 withMixin 后，无法 dispatch 到 effect 中异步方法。【目前没有找到原因】
-   > 安装使用到的第三方插件：
+    > `src/pages/login/model.ts` 作为 login 当前局部 model
+    > `src/services/login.ts` 新建 services 文件夹为整个项目的后端 API 服务，`login.ts`为 login 相关 API 服务
+    > `src/utils/request/api.ts` 使用 axios 实现项目 request API 与后端服务通讯
+    > `src/utils/env.ts` 作为项目 环境常量 声明文件
+    > 暂时抛弃：~~`src/utils/dva.ts` 新建 utils 文件夹作为全局的工具，`dva.ts`为所有 model 文件继承一些共用属性, `例：reducers中updateState()` 更新 state 方法; 引用 withMixin 后，无法 dispatch 到 effect 中异步方法。【目前没有找到原因】~~
+    > 安装使用到的第三方插件：
 
-   ```
-      $ yarn add axios
-      $ yarn add safe-reaper
+    ```
+       $ yarn add axios
+       $ yarn add safe-reaper
 
-      // package.json
-      "dependencies": {
-         "antd": "^4.24.2",
-      +  "axios": "^1.1.3",
-      +  "safe-reaper": "^2.1.0",
-         "umi": "^4.0.30"
-      },
-   ```
+       // package.json
+       "dependencies": {
+          "antd": "^4.24.2",
+       +  "axios": "^1.1.3",
+       +  "safe-reaper": "^2.1.0",
+          "umi": "^4.0.30"
+       },
+    ```
 
-   > 配置 dva
+    > 配置 dva
 
-   ```
-   // .umirc.ts
-   import { defineConfig } from "umi";
-   const path = require("path");
-   export default defineConfig({
-      ...,
-      dva: {},
-   });
-   ```
+    ```
+    // .umirc.ts
+    import { defineConfig } from "umi";
+    const path = require("path");
+    export default defineConfig({
+       ...,
+       dva: {},
+    });
+    ```
 
-6. 执行`yarn start`，报出下方问题 1
-   同时也会发现`src/pages/login/index.tsx`文件中提示错误 1&2
+6.  执行`yarn start`，报出下方问题 1
+    同时也会发现`src/pages/login/index.tsx`文件中提示错误 1&2
 
-   ```
-   // 问题1
-   fatal - AssertionError [ERR_ASSERTION]: Invalid config keys: dva
-      at Function.validateConfig (/Users/gaoyali-iris/Documents/umi4-project/umi4-react-template/node_modules/@umijs/core/dist/config/config.js:182:31)
-      at Config.getConfig (/Users/gaoyali-iris/Documents/umi4-project/umi4-react-template/node_modules/@umijs/core/dist/config/config.js:60:12)
-      at Service.resolveConfig (/Users/gaoyali-iris/Documents/umi4-project/umi4-react-template/node_modules/@umijs/core/dist/service/service.js:286:97)
-      at Service.run (/Users/gaoyali-iris/Documents/umi4-project/umi4-react-template/node_modules/@umijs/core/dist/service/service.js:235:50)
-      at processTicksAndRejections (internal/process/task_queues.js:95:5)
-      at async Service.run2 (/Users/gaoyali-iris/Documents/umi4-project/umi4-react-template/node_modules/umi/dist/service/service.js:58:12)
-      at async Object.run (/Users/gaoyali-iris/Documents/umi4-project/umi4-react-template/node_modules/umi/dist/cli/cli.js:55:7) {
-   generatedMessage: false,
-   code: 'ERR_ASSERTION',
-   actual: false,
-   expected: true,
-   operator: '=='
-   ```
+    ```
+    // 问题1
+    fatal - AssertionError [ERR_ASSERTION]: Invalid config keys: dva
+       at Function.validateConfig (/Users/gaoyali-iris/Documents/umi4-project/umi4-react-template/node_modules/@umijs/core/dist/config/config.js:182:31)
+       at Config.getConfig (/Users/gaoyali-iris/Documents/umi4-project/umi4-react-template/node_modules/@umijs/core/dist/config/config.js:60:12)
+       at Service.resolveConfig (/Users/gaoyali-iris/Documents/umi4-project/umi4-react-template/node_modules/@umijs/core/dist/service/service.js:286:97)
+       at Service.run (/Users/gaoyali-iris/Documents/umi4-project/umi4-react-template/node_modules/@umijs/core/dist/service/service.js:235:50)
+       at processTicksAndRejections (internal/process/task_queues.js:95:5)
+       at async Service.run2 (/Users/gaoyali-iris/Documents/umi4-project/umi4-react-template/node_modules/umi/dist/service/service.js:58:12)
+       at async Object.run (/Users/gaoyali-iris/Documents/umi4-project/umi4-react-template/node_modules/umi/dist/cli/cli.js:55:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: false,
+    expected: true,
+    operator: '=='
+    ```
 
-   ```
-   // 错误1：
-   Can not find 'redux'
-   // 错误2：
-   Module '"umi"' has no exported member 'connect'.ts(2305)
-   ```
+    ```
+    // 错误1：
+    Can not find 'redux'
+    // 错误2：
+    Module '"umi"' has no exported member 'connect'.ts(2305)
+    ```
 
-7. 由于我们使用的 umi4 在`node_modules/@umijs`下是没有 plugins 文件夹的，并且也不存在 dva ，这要怎么处理呢？网上翻了一大圈，发现 umi 提供了最佳方法，(DvaJS 配置生成器)[https://umijs.org/docs/guides/generator#dvajs-%E9%85%8D%E7%BD%AE%E7%94%9F%E6%88%90%E5%99%A8] 需要执行`umi g dva` 开启 dva
+7.  由于我们使用的 umi4 在`node_modules/@umijs`下是没有 plugins 文件夹的，并且也不存在 dva ，这要怎么处理呢？网上翻了一大圈，发现 umi 提供了最佳方法，(DvaJS 配置生成器)[https://umijs.org/docs/guides/generator#dvajs-%E9%85%8D%E7%BD%AE%E7%94%9F%E6%88%90%E5%99%A8] 需要执行`umi g dva` 开启 dva
 
-   ```
-   // package.json
-   {
-      ...,
-      "scripts": {
-         "dev": "umi dev",
-         "build": "umi build --clean",
-         "postinstall": "umi setup",
-         "setup": "umi setup",
-         "start": "npm run dev",
-      +  "umi:g:dva": "umi g dva"
-      },
-   }
+    ```
+    // package.json
+    {
+       ...,
+       "scripts": {
+          "dev": "umi dev",
+          "build": "umi build --clean",
+          "postinstall": "umi setup",
+          "setup": "umi setup",
+          "start": "npm run dev",
+       +  "umi:g:dva": "umi g dva"
+       },
+    }
 
-   $ yarn umi:g:dva
+    $ yarn umi:g:dva
 
-   // 执行命令后
-   生成一个新的全局model文件：src/models/count.ts
-   // .umirc.ts自动开启配置dva: {}
-   import { defineConfig } from "umi";
-   const path = require("path");
-   export default defineConfig({
-      ...,
-      dva: {},
-      plugins: ["@umijs/plugins/dist/dva"],
-   });
-   // package.json 自动加入@umijs/plugins
-   "devDependencies": {
-     "@types/react": "^18.0.0",
-     "@types/react-dom": "^18.0.0",
-     "typescript": "^4.1.2",
-   + "@umijs/plugins": "^4.0.30"
-   }
+    // 执行命令后
+    生成一个新的全局model文件：src/models/count.ts
+    // .umirc.ts自动开启配置dva: {}
+    import { defineConfig } from "umi";
+    const path = require("path");
+    export default defineConfig({
+       ...,
+       dva: {},
+       plugins: ["@umijs/plugins/dist/dva"],
+    });
+    // package.json 自动加入@umijs/plugins
+    "devDependencies": {
+      "@types/react": "^18.0.0",
+      "@types/react-dom": "^18.0.0",
+      "typescript": "^4.1.2",
+    + "@umijs/plugins": "^4.0.30"
+    }
 
-   $ yarn start
+    $ yarn start
 
-   // 项目可以正常启动访问啦！！！http://localhost:8000/login
+    // 项目可以正常启动访问啦！！！http://localhost:8000/login
 
-   // 再查看`src/pages/login/index.tsx`发现还会有错误2
-   // 关闭退出vscode, 重新打开后，解决问题
-   ```
+    // 再查看`src/pages/login/index.tsx`发现还会有错误2
+    // 关闭退出vscode, 重新打开后，解决问题
+    ```
 
-8. `mock` 在 umi4 中默认开，所以我们给项目中添加一个 mock 文件夹，与 src 文件夹平级。就这样我们可以在前端开发阶段，先自己进行数据调试。(~~后续会讲：使用 umi 的 proxy，或者 axios 的 baseURL 进行前后端联调以及本地 mock 的切换~~)
+8.  我们还需要[mock](https://umijs.org/docs/guides/mock)数据的支持，参考[Mock 生成器](https://umijs.org/docs/guides/generator#mock-%E7%94%9F%E6%88%90%E5%99%A8)，就这样我们可以在前端开发阶段，先自己进行数据调试。创建 `mock/login.ts` 返回登录数据
+
+    > 登录成功后，mock 返回数据，查看 network:
+
+    ![loginAPI1](./readme-source/login-success-api1.jpg "loginAPI1")
+
+    ![loginAPI2](./readme-source/login-success-api2.jpg "loginAPI2")
+
+    > 登录成功后，使用[React Developer Tools](https://chrome.google.com/webstore/detail/react-developer-tools/fmkadmapgofadopljbjfkapdkoienihi)查看 model 的 state tree 中挂载的 userInfo 数据
+
+    ![loginSuccessState](./readme-source/login-success-state.jpg "loginSuccessState")
+
+9.  我们也可以使用[代理](https://jsonplaceholder.typicode.com/users/1)访问其他服务器数据;修改`src/utils/env.ts` baseURL 在开发时，指向远端服务器:
+
+    ```
+    // 开发时，本地mock
+    export const baseURL = !isProduction ? "/" : "";
+
+    // 使用这个 开发时，远端服务
+    export const baseURL = !isProduction ? "https://jsonplaceholder.typicode.com/" : "";
+    ```
+
+    我们可以看到接口 404
+    ![jsonplaceholder1](./readme-source/jsonplaceholder1.jpg "jsonplaceholder1")
+
+    认真看会不会是因为多了个/api 导致呢！我们在`src/services/login.ts`删掉/api 试试;删除后，可以看到远端 API 通了，没有产生跨域问题(猜想远端服务处理了本地 localhost:8080 访问的跨域问题)。那我们如何能在不删除/api 情况也能正常访问呢？
+    ![jsonplaceholder2](./readme-source/jsonplaceholder2.jpg "jsonplaceholder2")
+
+    ![jsonplaceholder3](./readme-source/jsonplaceholder2.jpg "jsonplaceholder3")
+
+    尝试使用代理处理问题
+
+    ```
+    // 修改`src/utils/env.ts` baseURL 本地开发
+    export const baseURL = !isProduction ? "/" : "";
+
+    // `src/services/login.ts`还原 /api 开头
+    import API from "@/utils/request";
+    export function getUsers(payload: object) {
+       return API({
+          url: "/api/users/1",
+          method: "get",
+          params: payload,
+       });
+    }
+
+    // .umirc.ts 添加proxy
+    proxy: {
+     '/api': {
+       'target': 'http://jsonplaceholder.typicode.com/',
+       'changeOrigin': true,
+       'pathRewrite': { '^/api' : '' },
+     },
+    },
+    ```
+
+    yarn start 启动项目，点击 submit， 查看 network 信息; 发现触发到了 mock 服务，没有请求`http://jsonplaceholder.typicode.com/`服务
+    ![proxy1](./readme-source/proxy1.jpg "proxy1")
+
+    尝试[关闭 mock](https://umijs.org/docs/guides/mock#%E5%85%B3%E9%97%AD-mock)
+
+    ```
+    // package.json
+    "scripts": {
+       "dev": "umi dev",
+    +  "dev:no-mock": "MOCK=none umi dev",
+       "build": "umi build --clean",
+       "postinstall": "umi setup",
+       "setup": "umi setup",
+       "start": "npm run dev",
+       "umi:g:dva": "umi g dva",
+       "umi:g:mock": "umi g mock"
+    }
+    ```
+
+    启动 yarn dev:no-mock 可以看到触发到了远端服务
+    ![proxy2](./readme-source/proxy2.jpg "proxy2")
+
+    > 使用 mock: `yarn start` || `yarn dev`
+    > 使用远端服务: `yarn dev:no-mock`
+
+10. 我们看到登录页左上角有多余的 tab 切换，然而 home&docs 页面需要；造成这个的原因是所有路由都会默认走到`src/layouts/index`
+
+    > 新建`src/layouts/tabLayout`将 tab 切换代码，移动到这个文件夹下
+    > `src/layouts/index`只返回 Outlet
+    > 更改路由配置，在路由给需要的 home&docs 添加 tabLayout;但是所有路由依然还会被`src/layouts/index`处理
+
+    ```
+      // .umirc.ts
+      routes: [
+         {
+            path: "/",
+            component: "@/layouts/tabLayout/index",
+            routes: [
+               { path: "/home", component: "home" },
+               { path: "/docs", component: "docs" },
+            ],
+         },
+         { path: "/login", component: "login" },
+      ],
+    ```
+
+11. 跳转到 Todo 页面，[路由](https://umijs.org/docs/guides/routes)
+
+    ```
+    // src/pages/login/model.ts
+    import { Effect, history } from "umi";
+    history.push("/todo");
+    ```
+
+### Todo 实现
+
+1. 新建`src/pages/todo`的 model\tsx，新建`src/services/todo.ts`API, 具体代码查看这两个文件夹，不做具体写作讲解
+
+> 问题：
+> 登录页进入 todo 时：由于 submit 后接口反应慢，login 页面需要静止一会才能跳转到 todo，会造成误以为登录坏了。处理办法：加登录 loading 状态
+> todo 页面刷新，用户名为 null, 原因：刷掉 userInfo store 数据
+
+---

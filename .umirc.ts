@@ -8,9 +8,16 @@ export default defineConfig({
   clickToComponent: {},
   hash: true,
   routes: [
-    { path: "/", component: "home" },
-    { path: "/docs", component: "docs" },
+    {
+      path: "/",
+      component: "@/layouts/tabLayout/index",
+      routes: [
+        { path: "/home", component: "home" },
+        { path: "/docs", component: "docs" },
+      ],
+    },
     { path: "/login", component: "login" },
+    { path: "/todo", component: "todo" },
   ],
   theme: {},
   title: "Todo List",
@@ -41,4 +48,11 @@ export default defineConfig({
   },
   dva: { immer: {}, extraModels: [] },
   plugins: ["@umijs/plugins/dist/dva"],
+  proxy: {
+    "/api": {
+      target: "http://jsonplaceholder.typicode.com/",
+      changeOrigin: true,
+      pathRewrite: { "^/api": "" },
+    },
+  },
 });

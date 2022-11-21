@@ -1,10 +1,11 @@
-import { Effect, history } from "umi";
+import { Effect } from "umi";
 import { Reducer } from "redux";
 import { withMixin } from "@/utils/dva";
-import { getUsers } from "@/services/login";
+import { getTodos } from "@/services/todo";
 import { message } from "antd";
 import { AxiosResponse } from "axios";
 import { reap } from "safe-reaper";
+import { history } from "umi";
 
 interface IModel {
   namespace?: string;
@@ -23,27 +24,25 @@ interface IModel {
 }
 
 const login: IModel = {
-  namespace: "login",
+  namespace: "todo",
   state: {
-    userInfo: {},
+    list: {},
   },
   subscriptions: {},
   effects: {
-    *getUsers({ payload }: any, { put, call, select }: any) {
+    *getTodos({ payload }: any, { put, call, select }: any) {
       try {
         const res: Promise<AxiosResponse<any, any>> = yield call(
-          getUsers,
+          getTodos,
           payload
         );
 
         yield put({
           type: "updateState",
           payload: {
-            userInfo: res,
+            list: res,
           },
         });
-
-        history.push("/todo");
       } catch (error) {
         console.error(error);
       }

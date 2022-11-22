@@ -1,0 +1,17 @@
+# 一部分和 .gitignore 相同
+/node_modules
+/.env.local
+/.umirc.local.ts
+/config/config.local.ts
+/src/.umi
+/src/.umi-production
+/src/.umi-test
+/dist
+**/.git
+**/.svn
+**/.hg
+
+# 其他不需要格式化
+**/.vscode
+**/.husky
+/readme-source/**

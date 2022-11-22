@@ -241,7 +241,7 @@ import "antd/dist/antd.less";
     > 4. 我们看到页面刷新时，root 节点下没有了任何元素，导致出现白屏【白屏问题也可以解决，稍后讲解】
     > 5. 当看到与 root 节点同级出现 floating-ui-root 元素, 说明正在进行组件加载，同时看到 loading.tsx 在页面中显现出来
 
-    ![loadingTsxGif](./readme-source/umi-loadingtsx.gif "loadingTsxGif")
+    ![loadingTsxGif](./readme-source/umi-loadingtsx.gif 'loadingTsxGif')
 
 5.  在`src/pages/login/index.tsx`触发 submit 事件, username 和 password 通过验证后，要把数据提交给后端服务器处理。我们就需要 Effect 进行与后端的异步通讯，创建下方文件发送 getUsers 请求：
 
@@ -352,13 +352,13 @@ import "antd/dist/antd.less";
 
     > 登录成功后，mock 返回数据，查看 network:
 
-    ![loginAPI1](./readme-source/login-success-api1.jpg "loginAPI1")
+    ![loginAPI1](./readme-source/login-success-api1.jpg 'loginAPI1')
 
-    ![loginAPI2](./readme-source/login-success-api2.jpg "loginAPI2")
+    ![loginAPI2](./readme-source/login-success-api2.jpg 'loginAPI2')
 
     > 登录成功后，使用[React Developer Tools](https://chrome.google.com/webstore/detail/react-developer-tools/fmkadmapgofadopljbjfkapdkoienihi)查看 model 的 state tree 中挂载的 userInfo 数据
 
-    ![loginSuccessState](./readme-source/login-success-state.jpg "loginSuccessState")
+    ![loginSuccessState](./readme-source/login-success-state.jpg 'loginSuccessState')
 
 9.  我们也可以使用[代理](https://jsonplaceholder.typicode.com/users/1)访问其他服务器数据;修改`src/utils/env.ts` baseURL 在开发时，指向远端服务器:
 
@@ -371,12 +371,12 @@ import "antd/dist/antd.less";
     ```
 
     我们可以看到接口 404
-    ![jsonplaceholder1](./readme-source/jsonplaceholder1.jpg "jsonplaceholder1")
+    ![jsonplaceholder1](./readme-source/jsonplaceholder1.jpg 'jsonplaceholder1')
 
     认真看会不会是因为多了个/api 导致呢！我们在`src/services/login.ts`删掉/api 试试;删除后，可以看到远端 API 通了，没有产生跨域问题(猜想远端服务处理了本地 localhost:8080 访问的跨域问题)。那我们如何能在不删除/api 情况也能正常访问呢？
-    ![jsonplaceholder2](./readme-source/jsonplaceholder2.jpg "jsonplaceholder2")
+    ![jsonplaceholder2](./readme-source/jsonplaceholder2.jpg 'jsonplaceholder2')
 
-    ![jsonplaceholder3](./readme-source/jsonplaceholder2.jpg "jsonplaceholder3")
+    ![jsonplaceholder3](./readme-source/jsonplaceholder2.jpg 'jsonplaceholder3')
 
     尝试使用代理处理问题
 
@@ -405,7 +405,7 @@ import "antd/dist/antd.less";
     ```
 
     yarn start 启动项目，点击 submit， 查看 network 信息; 发现触发到了 mock 服务，没有请求`http://jsonplaceholder.typicode.com/`服务
-    ![proxy1](./readme-source/proxy1.jpg "proxy1")
+    ![proxy1](./readme-source/proxy1.jpg 'proxy1')
 
     尝试[关闭 mock](https://umijs.org/docs/guides/mock#%E5%85%B3%E9%97%AD-mock)
 
@@ -424,7 +424,7 @@ import "antd/dist/antd.less";
     ```
 
     启动 yarn dev:no-mock 可以看到触发到了远端服务
-    ![proxy2](./readme-source/proxy2.jpg "proxy2")
+    ![proxy2](./readme-source/proxy2.jpg 'proxy2')
 
     > 使用 mock: `yarn start` || `yarn dev`
     > 使用远端服务: `yarn dev:no-mock`
@@ -459,7 +459,7 @@ import "antd/dist/antd.less";
     ```
 
 12. 登录页进入 todo 时，由于点击 submit 后接口响应需要 2.02s，login 页面需要静止一会才能跳转到 todo
-    ![loadingLogin](./readme-source/loading-login.png "loadingLogin")
+    ![loadingLogin](./readme-source/loading-login.png 'loadingLogin')
 
     处理办法：加登录 loading 状态
 
@@ -481,7 +481,7 @@ import "antd/dist/antd.less";
 > 问题 1：
 > todo 页面刷新，用户名为 null
 
-![umiRefreshNoStoreGif](./readme-source/umi-refresh-no-store.gif "umiRefreshNoStoreGif")
+![umiRefreshNoStoreGif](./readme-source/umi-refresh-no-store.gif 'umiRefreshNoStoreGif')
 
 > 找到原因：刷掉 userInfo store 数据
 > 处理办法：layout 中获取用户信息
@@ -497,15 +497,15 @@ import "antd/dist/antd.less";
    }, []);
 ```
 
-![umiRefreshHasStoreGif](./readme-source/umi-refresh-has-store.gif "umiRefreshHasStoreGif")
+![umiRefreshHasStoreGif](./readme-source/umi-refresh-has-store.gif 'umiRefreshHasStoreGif')
 
 ---
 
 ## 编码规范
 
-> eslint + stylelint + husky + lint-stage + verifyCommit/commitlint + prettier
+> eslint + stylelint + husky + lint-stage + verifyCommit/commitlint + prettier + vscode
 > 参考：[编码规范](https://umijs.org/docs/guides/lint#%E7%BC%96%E7%A0%81%E8%A7%84%E8%8C%83)
-> 为了节省安装体积，目前仅在 Umi Max 中内置了 Lint 模块，使用 max lint 来执行 lint 过程。
+> 为了节省安装体积，目前仅在 Umi Max 中内置了 Lint 模块，使用 max lint 来执行 lint 过程
 > 咱们当前使用的是 Umi，需要先安装 @umijs/lint
 
 ### 安装支持 @umijs/lint
@@ -648,6 +648,8 @@ $ git commit -am 'GIT HOOKS配置'
  create mode 100644 .stylelintrc.js
 ```
 
+### verifycommit/commitlint 提交信息检查
+
 我们可以使用[verifycommit](https://umijs.org/docs/api/commands#verifycommit)验证 commit message 信息;
 还要记得使用 [verifyCommit 配置](https://umijs.org/docs/api/config#verifycommit) 进行开启;
 
@@ -682,3 +684,85 @@ $ git commit -am 'style: husky hooks verify commit msg'
  2 files changed, 55 insertions(+), 1 deletion(-)
  create mode 100755 .husky/commit-msg
 ```
+
+### prettier
+
+> 上边已经配置 linters，为什么还要使用 prettier？
+>
+> 1. linters 不仅能够检查代码格式问题，还能够插件代码质量问题；那么当 linters 提示格式出现问题时，开发者就需要手动解决红线提示的格式问题，这会让开发者很崩溃；
+> 2. 所以我们使用 Prettier 来解决代码格式问题；使用 linters 来解决代码质量问题
+
+1. 统一代码风格[安装 prettier](https://prettier.io/docs/en/install.html)
+
+```
+// 安装prettier
+$ yarn add --dev --exact prettier
+
+// 创建.prettierrc文件
+$ echo {}> .prettierrc
+// 写入格式代码
+{
+  "useTabs": false, // 不使用tab
+  "tabWidth": 2, // tab改为2宽度
+  "printWidth": 120, // 代码行最大宽120
+  "singleQuote": true, // 使用单引号
+  "trailingComma": "es5", // 使用尾随逗号
+  "semi": true // 使用分号
+}
+
+// 创建 .prettierignore，可写入不需要格式的文件
+$ touch .prettierignore
+```
+
+2. 要做到[兼容 linters](https://prettier.io/docs/en/integrating-with-linters.html)
+
+```
+$ yarn add eslint-config-prettier -D
+
+// .eslintrc.js
+// 将“prettier”添加到 .eslintrc.* 文件中的“extends”数组。确保把它放在最后，这样它就有机会覆盖其他配置
+// 参考来自：https://github.com/prettier/eslint-config-prettier#installation
+module.exports = {
+  // Umi 项目
+  extends: [require.resolve('umi/eslint'), 'prettier'],
+}
+
+$ yarn add stylelint-config-prettier -D
+// 来自：https://github.com/prettier/stylelint-config-prettier#installation
+// .stylelintrc.js
+module.exports = {
+  // Umi 项目
+  extends: [require.resolve('umi/stylelint'), 'stylelint-config-prettier'],
+}
+```
+
+### vscode
+
+> 为了使协同开发人员，能够在编辑代码时候更加的随性，那么我们的`编译器`就需要在保存代码时进行格式化
+
+我们在`.vscode/settings.json`中添加配置：
+
+```
+{
+  "files.exclude": {
+    "**/.git": false
+  },
+  "editor.tabSize": 2,
+  "editor.formatOnSave": true,
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
+  "editor.codeActionsOnSave": {
+    "source.fixAll.eslint": true,
+    "source.fixAll.stylelint": true
+  },
+  "eslint.alwaysShowStatus": true,
+  "eslint.validate": ["javascript", "javascriptreact", "typescript", "typescriptreact"],
+
+  "css.validate": false,
+  "less.validate": false,
+  "scss.validate": false,
+  "stylelint.validate": ["css", "less", "scss"]
+}
+```
+
+> vscode 需要安装第三方库插件
+> eslint prettier stylelint

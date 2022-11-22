@@ -2,15 +2,20 @@
   "private": true,
   "author": "sanshuiwang <768188667@qq.com>",
   "scripts": {
+    "build": "umi build --clean",
     "dev": "umi dev",
     "dev:no-mock": "MOCK=none umi dev",
-    "build": "umi build --clean",
     "postinstall": "umi setup",
+    "prepare": "husky install",
     "setup": "umi setup",
     "start": "npm run dev",
     "umi:g:dva": "umi g dva",
-    "umi:g:mock": "umi g mock",
-    "prepare": "husky install"
+    "umi:g:mock": "umi g mock"
+  },
+  "lint-staged": {
+    "*.{js,jsx,ts,tsx,css,less}": [
+      "umi lint"
+    ]
   },
   "dependencies": {
     "antd": "^4.24.2",
@@ -24,13 +29,11 @@
     "@umijs/lint": "^4.0.32",
     "@umijs/plugins": "^4.0.30",
     "eslint": "^8.28.0",
+    "eslint-config-prettier": "^8.5.0",
+    "husky": "^8.0.0",
+    "prettier": "2.7.1",
     "stylelint": "^14.15.0",
-    "typescript": "^4.1.2",
-    "husky": "^8.0.0"
-  },
-  "lint-staged": {
-    "*.{js,jsx,ts,tsx,css,less}": [
-      "umi lint"
-    ]
+    "stylelint-config-prettier": "^9.0.4",
+    "typescript": "^4.1.2"
   }
 }

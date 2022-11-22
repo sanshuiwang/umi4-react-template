@@ -1,8 +1,8 @@
-# umi4 + antd@4 + dva + mock + proxy
+# React 基于 umi 脚手架
 
 ---
 
-## React 基于 umi 脚手架
+## umi4 + antd@4 + dva + mock + proxy
 
 ### 环境准备
 
@@ -129,7 +129,7 @@ dist
 9. [verifyCommit](https://umijs.org/docs/api/config#verifycommit) 对 git commit 提交信息进行验证
    > 发现问题：【刚配置时，我以为开箱即用呢！后续将在提交代码、信息，与 husky,commitlint 进行详细】
    > git commit 时，随意输入提交信息，居然成功 commit
-   > 找到原因，需要在[.husky/commit-msg 配置](https://umijs.org/docs/api/commands#verifycommit)
+   > 找到原因是没有 husky 钩子，需要在[.husky/commit-msg 配置](https://umijs.org/docs/api/commands#verifycommit)
 
 ```
 // .umirc.ts
@@ -182,7 +182,7 @@ dist
 
 ## 编写 Todo List
 
-> 包含：1. 登录 2. 列表增删改
+> 包含：1. 登录 2. 列表
 > 技术：antd@4 + @umijs/plugins + dva + mock + proxy + loading.tsx + 白屏解决方案
 
 ### UI 使用 `"antd": "^4.24.2"`
@@ -500,3 +500,130 @@ import "antd/dist/antd.less";
 ![umiRefreshHasStoreGif](./readme-source/umi-refresh-has-store.gif "umiRefreshHasStoreGif")
 
 ---
+
+## 编码规范
+
+> 参考：[编码规范](https://umijs.org/docs/guides/lint#%E7%BC%96%E7%A0%81%E8%A7%84%E8%8C%83)
+> 为了节省安装体积，目前仅在 Umi Max 中内置了 Lint 模块，使用 max lint 来执行 lint 过程。
+> 咱们当前使用的是 Umi，需要先安装 @umijs/lint
+
+### 安装支持 @umijs/lint
+
+```
+$ yarn add @umijs/lint -D
+
+$ yarn add eslint stylelint -D
+```
+
+安装完毕后，我们在 node_modules/@umijs/lint 中，可以看到 @umijs/lint 库已经帮我们集成了很多 react & ts & style 进行 eslint 操作等相关的库。最后呢，我们需要[启用配置](https://umijs.org/docs/guides/lint#%E5%90%AF%E7%94%A8%E9%85%8D%E7%BD%AE)
+
+```
+// .eslintrc.js
+module.exports = {
+  // Umi 项目
+  extends: require.resolve('umi/eslint'),
+}
+
+// .stylelintrc.js
+module.exports = {
+  // Umi 项目
+  extends: require.resolve('umi/stylelint'),
+}
+```
+
+> 现在如果执行 umi lint 就可以把文件检查一遍
+
+### 与 Git 工作流结合使用
+
+> lint-staged 执行 lint 指令时，只检查当前更改的内容
+> Husky 用来绑定 Git Hooks，可以指定我们在 git... 某个动作时，执行指令进行代码检查
+
+### 安装&配置 lint-staged
+
+```
+$ yarn add lint-staged -D
+
+// 在 package.json 中配置 lint-staged：
+"lint-staged": {
+   "*.{js,jsx,ts,tsx,css,less}": [
+      "umi lint"
+   ]
+}
+```
+
+> 在`git add ...`后，我们就可以执行`npx lint-staged`检查更改的内容
+
+### 安装 Husky
+
+```
+$ npx husky-init
+
+// 执行后命令行打印出来：
+npx: 2 安装成功，用时 11.348 秒
+husky-init updating package.json
+  setting prepare script to command "husky install"
+husky - Git hooks installed
+husky - created .husky/pre-commit
+
+please review changes in package.json
+```
+
+执行命令后，发生两项变化:
+
+1. 自动创建.husky/pre-commit
+2. 命令改变了 package.json："scripts" 新增 prepare，"devDependencies" 新增 husky
+
+```
+"scripts": {
+   "dev": "umi dev",
+   "dev:no-mock": "MOCK=none umi dev",
+   "build": "umi build --clean",
+   "postinstall": "umi setup",
+   "setup": "umi setup",
+   "start": "npm run dev",
+   "umi:g:dva": "umi g dva",
+   "umi:g:mock": "umi g mock",
++  "prepare": "husky install"
+},
+
+"devDependencies": {
+   "@types/react": "^18.0.0",
+   "@types/react-dom": "^18.0.0",
+   "@umijs/lint": "^4.0.32",
+   "@umijs/plugins": "^4.0.30",
+   "eslint": "^8.28.0",
+   "stylelint": "^14.15.0",
+   "typescript": "^4.1.2",
++  "husky": "^8.0.0"
+},
+```
+
+查看 node_modules 中没有安装 husky，我们需要执行`yarn`指令安装
+
+```
+$ yarn
+```
+
+就这样 husky 安装成功啦！
+
+查看生成的`.husky/pre-commit`文件
+
+```
+// .husky/pre-commit
+#!/usr/bin/env sh
+. "$(dirname -- "$0")/_/husky.sh"
+
+npm test
+```
+
+我们更改为执行`npx lint-staged`；这样会在执行`git commit ...`时先自动进行更改内容的检查
+
+```
+// .husky/pre-commit
+#!/usr/bin/env sh
+. "$(dirname -- "$0")/_/husky.sh"
+
+npx lint-staged
+```
+
+现在我们 commit 一下项目试试

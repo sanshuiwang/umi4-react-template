@@ -503,6 +503,7 @@ import "antd/dist/antd.less";
 
 ## 编码规范
 
+> eslint + stylelint + husky + lint-stage + verifyCommit/commitlint + prettier
 > 参考：[编码规范](https://umijs.org/docs/guides/lint#%E7%BC%96%E7%A0%81%E8%A7%84%E8%8C%83)
 > 为了节省安装体积，目前仅在 Umi Max 中内置了 Lint 模块，使用 max lint 来执行 lint 过程。
 > 咱们当前使用的是 Umi，需要先安装 @umijs/lint
@@ -518,14 +519,14 @@ $ yarn add eslint stylelint -D
 安装完毕后，我们在 node_modules/@umijs/lint 中，可以看到 @umijs/lint 库已经帮我们集成了很多 react & ts & style 进行 eslint 操作等相关的库。最后呢，我们需要[启用配置](https://umijs.org/docs/guides/lint#%E5%90%AF%E7%94%A8%E9%85%8D%E7%BD%AE)
 
 ```
-// .eslintrc.js
-module.exports = {
+// .eslintrc
+{
   // Umi 项目
   extends: require.resolve('umi/eslint'),
 }
 
-// .stylelintrc.js
-module.exports = {
+// .stylelintrc
+{
   // Umi 项目
   extends: require.resolve('umi/stylelint'),
 }
@@ -555,7 +556,7 @@ $ yarn add lint-staged -D
 
 ### 安装 Husky
 
-> 参考 Husky 文档：[https://typicode.github.io/husky/#/?id=automatic-recommended](https://typicode.github.io/husky/#/?id=automatic-recommended)
+> 参考 Husky install 文档：[https://typicode.github.io/husky/#/?id=automatic-recommended](https://typicode.github.io/husky/#/?id=automatic-recommended)
 
 ```
 $ npx husky-init
@@ -647,19 +648,20 @@ $ git commit -am 'GIT HOOKS配置'
  create mode 100644 .stylelintrc.js
 ```
 
-目前看来我们可以使用[verifycommit](https://umijs.org/docs/api/commands#verifycommit)验证 commit message 信息;
+我们可以使用[verifycommit](https://umijs.org/docs/api/commands#verifycommit)验证 commit message 信息;
 还要记得使用 [verifyCommit 配置](https://umijs.org/docs/api/config#verifycommit) 进行开启;
+
+> 可以自己尝试使用[commitlint](https://commitlint.js.org/#/guides-local-setup?id=install-commitlint)验证 commit message 信息；我们这里使用 verifycommit
 
 ```
 // 创建`.husky/commit-msg 并写入要执行verify-commit的指令
+// 可以看到.husky 下多了个 commit-msg 文件
 $ npx husky add .husky/commit-msg 'npx --no-install umi verify-commit $1'
 ```
 
-现在我们随意输入 commit 提交信息试试
-
 ```
 $ git add -A
-
+// 现在我们随意输入 commit 提交信息试试
 $ git commit -am 'husky hooks verify commit msg'
 
 // 终端打印：
@@ -675,5 +677,8 @@ husky - commit-msg hook exited with code 1 (error)
 
 // 按照verifyCommit规范提交：
 $ git commit -am 'style: husky hooks verify commit msg'
-
+// 提交成功，终端打印：
+[main 3af8c06] style: husky hooks verify commit msg
+ 2 files changed, 55 insertions(+), 1 deletion(-)
+ create mode 100755 .husky/commit-msg
 ```

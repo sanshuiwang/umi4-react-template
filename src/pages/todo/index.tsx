@@ -30,22 +30,20 @@ const mapStateToProps = ({ loading, login }: any) => ({
 });
 
 const mapDispatchToProps = (dispatch: Function) => ({
-  getTodos: (params: object) => {
+  getTodos: (params: object) =>
     dispatch({
       type: `todo/getTodos`,
       payload: {
         ...params,
       },
-    });
-  },
-  updateState: (params: object) => {
+    }),
+  updateState: (params: object) =>
     dispatch({
       type: `todo/updateState`,
       payload: {
         ...params,
       },
-    });
-  },
+    }),
 });
 const enhance = compose(connect(mapStateToProps, mapDispatchToProps));
 

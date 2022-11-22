@@ -34,25 +34,31 @@ const configHeaders = () => {
   return headers;
 };
 
-function createAPI(host: string) {
+function createAPI(
+  host: string,
+  isCancelToken: boolean = true,
+  headers: object = {}
+) {
   const API = axios.create({
     baseURL: host,
   });
 
   API.interceptors.request.use(
     (config: any) => {
-      Object.assign(config.headers, configHeaders());
+      Object.assign(config.headers, { ...configHeaders(), ...headers });
 
-      let cancel: Function = () => {};
-      config.cancelToken = new axios.CancelToken(function (c: Function) {
-        cancel = c;
-      });
-      stopRepeatRequest(
-        reqList,
-        config.url,
-        cancel,
-        `${config.url} 重复的请求被中断`
-      );
+      if (isCancelToken) {
+        let cancel: Function = () => {};
+        config.cancelToken = new axios.CancelToken(function (c: Function) {
+          cancel = c;
+        });
+        stopRepeatRequest(
+          reqList,
+          config.url,
+          cancel,
+          `${config.url} 重复的请求被中断`
+        );
+      }
 
       return config;
     },
@@ -65,9 +71,10 @@ function createAPI(host: string) {
   // 响应拦截器
   API.interceptors.response.use(
     (response: any) => {
-      setTimeout(() => {
-        allowOpenRequest(reqList, response.config.url);
-      }, 1000);
+      isCancelToken &&
+        setTimeout(() => {
+          allowOpenRequest(reqList, response.config.url);
+        }, 1000);
 
       const { data } = response;
       const { code } = data;
@@ -80,12 +87,14 @@ function createAPI(host: string) {
       return data;
     },
     (error: any) => {
-      if (axios.isCancel(error)) {
-        message.error(`Axios response is cancel:: ${error.message}`);
-      } else {
-        setTimeout(() => {
-          allowOpenRequest(reqList, error.config.url);
-        }, 1000);
+      if (isCancelToken) {
+        if (axios.isCancel(error)) {
+          message.error(`Axios response is cancel:: ${error.message}`);
+        } else {
+          setTimeout(() => {
+            allowOpenRequest(reqList, error.config.url);
+          }, 1000);
+        }
       }
 
       console.error("Axios response:: ", error.message);

@@ -468,13 +468,35 @@ import "antd/dist/antd.less";
     const mapStateToProps = ({ loading }: any) => ({
       isLoading: loading.effects["login/getUsers"] || false,
     });
+
+    <Button loading={isLoading} type="primary" htmlType="submit" block>
+      Submit
+    </Button>
     ```
 
 ### Todo 实现
 
 1. 新建`src/pages/todo`的 tsx、model，新建`src/services/todo.ts`的 API, 具体代码查看这两个文件夹，不做具体写作讲解，会讲解写作时，发现的问题
 
-> 问题：
-> todo 页面刷新，用户名为 null, 原因：刷掉 userInfo store 数据
+> 问题 1：
+> todo 页面刷新，用户名为 null
+
+![umiRefreshNoStoreGif](./readme-source/umi-refresh-no-store.gif "umiRefreshNoStoreGif")
+
+> 找到原因：刷掉 userInfo store 数据
+> 处理办法：layout 中获取用户信息
+
+```
+// src/layouts/index.tsx
+// 在 layout 中每次跳转或者页面刷新时，都会执行一次effect来获取用户信息
+   useEffect(() => {
+      // 获取用户信息
+      if (pathname !== "/login") {
+         getUsers();
+      }
+   }, []);
+```
+
+![umiRefreshHasStoreGif](./readme-source/umi-refresh-has-store.gif "umiRefreshHasStoreGif")
 
 ---

@@ -1,6 +1,6 @@
 import { Fragment } from "react";
 import { compose } from "redux";
-import { connect } from "umi";
+import { connect, history } from "umi";
 import { Button, Form, Input, message } from "antd";
 
 import styles from "./index.less";
@@ -14,7 +14,9 @@ function Login(props: IProps) {
 
   const onFinish = (values: any) => {
     console.log("Success:", values);
-    getUsers(values);
+    getUsers(values).then((res: object) => {
+      history.push("/todo");
+    });
   };
 
   const onFinishFailed = (errorInfo: any) => {
@@ -75,22 +77,20 @@ const mapStateToProps = ({ loading }: any) => ({
 });
 
 const mapDispatchToProps = (dispatch: Function) => ({
-  getUsers: (params: object) => {
+  getUsers: (params: object) =>
     dispatch({
       type: `login/getUsers`,
       payload: {
         ...params,
       },
-    });
-  },
-  updateState: (params: object) => {
+    }),
+  updateState: (params: object) =>
     dispatch({
       type: `login/updateState`,
       payload: {
         ...params,
       },
-    });
-  },
+    }),
 });
 const enhance = compose(connect(mapStateToProps, mapDispatchToProps));
 

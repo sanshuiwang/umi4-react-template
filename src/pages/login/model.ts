@@ -1,4 +1,4 @@
-import { Effect, history } from "umi";
+import { Effect } from "umi";
 import { Reducer } from "redux";
 import { withMixin } from "@/utils/dva";
 import { getUsers } from "@/services/login";
@@ -43,7 +43,7 @@ const login: IModel = {
           },
         });
 
-        history.push("/todo");
+        return res;
       } catch (error) {
         console.error(error);
       }

@@ -555,6 +555,8 @@ $ yarn add lint-staged -D
 
 ### 安装 Husky
 
+> 参考 Husky 文档：[https://typicode.github.io/husky/#/?id=automatic-recommended](https://typicode.github.io/husky/#/?id=automatic-recommended)
+
 ```
 $ npx husky-init
 
@@ -626,4 +628,52 @@ npm test
 npx lint-staged
 ```
 
-现在我们 commit 一下项目试试
+现在我们 commit 一下项目试试，可以看到执行了 lint-staged
+
+```
+$ git add -A
+
+$ git commit -am 'GIT HOOKS配置'
+
+// 终端打印：
+✔ Preparing lint-staged...
+✔ Running tasks for staged files...
+✔ Applying modifications from tasks...
+✔ Cleaning up temporary files...
+[main 3fdbce2] GIT HOOKS配置
+ 6 files changed, 921 insertions(+), 25 deletions(-)
+ create mode 100644 .eslintrc.js
+ create mode 100755 .husky/pre-commit
+ create mode 100644 .stylelintrc.js
+```
+
+目前看来我们可以使用[verifycommit](https://umijs.org/docs/api/commands#verifycommit)验证 commit message 信息;
+还要记得使用 [verifyCommit 配置](https://umijs.org/docs/api/config#verifycommit) 进行开启;
+
+```
+// 创建`.husky/commit-msg 并写入要执行verify-commit的指令
+$ npx husky add .husky/commit-msg 'npx --no-install umi verify-commit $1'
+```
+
+现在我们随意输入 commit 提交信息试试
+
+```
+$ git add -A
+
+$ git commit -am 'husky hooks verify commit msg'
+
+// 终端打印：
+Error: Invalid commit message format.
+
+Proper commit message format is required for automated changelog generation.
+Examples:
+
+  chore(release): update changelog
+  fix(core): handle events on blur (close #28)
+
+husky - commit-msg hook exited with code 1 (error)
+
+// 按照verifyCommit规范提交：
+$ git commit -am 'style: husky hooks verify commit msg'
+
+```

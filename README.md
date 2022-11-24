@@ -129,7 +129,8 @@ dist
 9. [verifyCommit](https://umijs.org/docs/api/config#verifycommit) 对 git commit 提交信息进行验证
    > 发现问题：【刚配置时，我以为开箱即用呢！后续将在提交代码、信息，与 husky,commitlint 进行详细】
    > git commit 时，随意输入提交信息，居然成功 commit
-   > 找到原因是没有 husky 钩子，需要在[.husky/commit-msg 配置](https://umijs.org/docs/api/commands#verifycommit)
+   > 找到原因：我们没有安装 husky 钩子，需要在[.husky/commit-msg 配置](https://umijs.org/docs/api/commands#verifycommit)
+   > 下边在 GIT HOOKS 会讲解 husky，正确打开 verifyCommit
 
 ```
 // .umirc.ts
@@ -685,6 +686,8 @@ $ git commit -am 'style: husky hooks verify commit msg'
  create mode 100755 .husky/commit-msg
 ```
 
+~~ 提交代码体验 git hooks & verifyCommit 过程动图 ~~
+
 ### prettier
 
 > 上边已经配置 linters，为什么还要使用 prettier？
@@ -764,5 +767,12 @@ module.exports = {
 }
 ```
 
-> vscode 需要安装第三方库插件
-> eslint prettier stylelint
+vscode 需要安装第三方库插件
+
+> [eslint](https://marketplace.visualstudio.com/items?itemName=dbaeumer.vscode-eslint)
+
+> [prettier](https://marketplace.visualstudio.com/items?itemName=esbenp.prettier-vscode)
+
+> [stylelint](https://marketplace.visualstudio.com/items?itemName=stylelint.vscode-stylelint)
+
+~~ 体验 vscode 中 command+s 保存代码后自动格式化 ~~

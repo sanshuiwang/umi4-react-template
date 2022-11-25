@@ -1,6 +1,6 @@
 const express = require('express');
 const path = require('path');
-const port = process.env.PORT || 8080;
+const port = process.env.PORT || 8082;
 const app = express();
 
 const WEEK = 7 * 24 * 60 * 60 * 1000;

@@ -895,3 +895,13 @@ Network: 172.20.10.2:8080
 
 > kill 进程 bash 脚本：`shells/stop.sh`
 > 可直接执行`$ bash shells/stop.sh`kill 进程
+
+## nginx 反向代理
+
+> 使用 node 作为前端服务，使用 nginx 作为 node 服务的 API 代理；实现两个容器需要两个端口
+
+```
+$ nginx -s reload
+$ ps ax -o pid,ppid,%cpu,vsz,wchan,command|egrep '(nginx|PID)'
+$ sudo nginx -s quit
+```

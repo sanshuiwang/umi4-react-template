@@ -2,7 +2,17 @@
 
 ---
 
-## umi4 + antd@4 + dva + mock + proxy
+## 目录
+
+- [技术栈: umi4 + antd@4 + dva + mock + proxy](#section1)
+- [先简单添加一些 umi 配置项](#section2)
+- [编写 Todo List](#section3)
+- [编码规范](#section4)
+- [部署脚本](#section5)
+
+---
+
+## umi4 + antd@4 + dva + mock + proxy {#section1}
 
 ### 环境准备
 
@@ -33,7 +43,7 @@
 
 ---
 
-## 先简单添加一些 umi 配置项
+## 先简单添加一些 umi 配置项 {#section2}
 
 > [配置](https://umijs.org/docs/api/config)
 
@@ -181,7 +191,7 @@ dist
 
 ---
 
-## 编写 Todo List
+## 编写 Todo List {#section3}
 
 > 包含：1. 登录 2. 列表
 > 技术：antd@4 + @umijs/plugins + dva + mock + proxy + loading.tsx + 白屏解决方案
@@ -418,7 +428,7 @@ import "antd/dist/antd.less";
        "build": "umi build --clean",
        "postinstall": "umi setup",
        "setup": "umi setup",
-       "start": "npm run dev",
+       "start": "npm run dev:no-mock",
        "umi:g:dva": "umi g dva",
        "umi:g:mock": "umi g mock"
     }
@@ -427,8 +437,9 @@ import "antd/dist/antd.less";
     启动 yarn dev:no-mock 可以看到触发到了远端服务
     ![proxy2](./readme-source/proxy2.jpg 'proxy2')
 
-    > 使用 mock: `yarn start` || `yarn dev`
-    > 使用远端服务: `yarn dev:no-mock`
+    > 使用 mock: `yarn dev`
+    > 使用远端服务: `yarn dev:no-mock`，但是这样我们要在命令行乔太长，我们修改 start 指令
+    > `"start": "npm run dev:no-mock"` 这样直接`yarn start`替代`yarn dev:no-mock`
 
 10. 我们看到登录页左上角有多余的 tab 切换，然而 home&docs 页面需要；造成这个的原因是所有路由都会默认走到`src/layouts/index`
 
@@ -502,7 +513,7 @@ import "antd/dist/antd.less";
 
 ---
 
-## 编码规范
+## 编码规范 {#section4}
 
 > eslint + stylelint + husky + lint-stage + verifyCommit/commitlint + prettier + vscode
 > 参考：[编码规范](https://umijs.org/docs/guides/lint#%E7%BC%96%E7%A0%81%E8%A7%84%E8%8C%83)
@@ -776,3 +787,66 @@ vscode 需要安装第三方库插件
 > [stylelint](https://marketplace.visualstudio.com/items?itemName=stylelint.vscode-stylelint)
 
 ~~ 体验 vscode 中 command+s 保存代码后自动格式化 ~~
+
+## 部署脚本 {#section5}
+
+1. 使用 express 启动
+
+> 使用 express 对项目 umi build 后 dist 资源进行启动
+
+```
+// 安装express
+$ yarn add express
+```
+
+2. 编写服务脚本
+
+> 查看 `server/index.js` 编写好的服务脚本
+
+3. 使用 nodemon 启动脚本
+
+```
+// 安装nodemon
+$ yarn add nodemon -D
+
+// 使用nodemon启动脚本
+$ nodemon server --title=UMI4_REACT_TEMPLATE
+
+// nodemon配置监控文件
+// package.json
+"scripts": {
+   "build": "umi build --clean",
+   "dev": "umi dev",
+   "dev:no-mock": "MOCK=none umi dev",
+   "postinstall": "umi setup",
+   "prepare": "husky install",
++  "server": "nodemon server --title=UMI4_REACT_TEMPLATE",
+   "setup": "umi setup",
+   "start": "npm run dev",
+   "umi:g:dva": "umi g dva",
+   "umi:g:mock": "umi g mock"
+},
+"nodemonConfig": {
+   "watch": [
+   "server/*",
+   "dist/*"
+   ]
+},
+
+// 启动前先build
+$ yarn build
+
+// 启动脚本，为dist提供服务
+$ yarn server
+
+// 执行bash脚本查看启动服务状态
+$ ps aux | grep -i 'node server --title=UMI4_REACT_TEMPLATE'
+
+gaoyali-iris      4554   0.0  0.2 34421028  29820 s000  S+   11:16上午   0:00.21 /usr/local/bin/node server --title=UMI4_REACT_TEMPLATE
+gaoyali-iris      4597   0.0  0.0 34122844    816 s001  R+   11:17上午   0:00.00 grep --color=auto --exclude-dir=.bzr --exclude-dir=CVS --exclude-dir=.git --exclude-dir=.hg --exclude-dir=.svn --exclude-dir=.idea --exclude-dir=.tox -i node server --title=UMI4_REACT_TEMPLATE
+
+// 可以看到当前服务进程为4554
+$ ps aux | grep -i 'node server --title=UMI4_REACT_TEMPLATE' | grep -v grep | awk {'print $2'}
+
+4554
+```

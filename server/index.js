@@ -9,6 +9,20 @@ function resolveFromRoot(...relativePath) {
   return path.resolve(__dirname, '..', ...relativePath);
 }
 
+function getIPAdress() {
+  const interfaces = require('os').networkInterfaces(); //服务器本机地址
+  // eslint-disable-next-line guard-for-in
+  for (let devName in interfaces) {
+    let iface = interfaces[devName];
+    for (let i = 0; i < iface.length; i++) {
+      let alias = iface[i];
+      if (alias.family === 'IPv4' && alias.address !== '127.0.0.1' && !alias.internal) {
+        return alias.address;
+      }
+    }
+  }
+}
+
 const staticFilesUrl = resolveFromRoot('dist');
 console.log('加载静态资源:: ', staticFilesUrl);
 // 通常用于加载静态资源
@@ -27,4 +41,6 @@ app.get('*', function (request, response) {
 });
 
 app.listen(port);
-console.log('server started on port ' + port);
+
+console.log(`Local: http://localhost:${port}`);
+console.log(`Network: ${getIPAdress()}:${port}`);

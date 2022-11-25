@@ -888,3 +888,8 @@ Local: http://localhost:8080
 Network: 172.20.10.2:8080
 
 ```
+
+4. 使用 bash 进行 kill 进程
+
+> kill 进程 bash 脚本：`shells/stop.sh`
+> 可直接执行`$ bash shells/stop.sh`kill 进程

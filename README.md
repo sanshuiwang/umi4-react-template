@@ -899,6 +899,7 @@ Network: 172.20.10.2:8080
 ## nginx 反向代理
 
 > 使用 node 作为前端服务，使用 nginx 作为 node 服务的 API 代理；实现两个容器需要两个端口
+> [1](https://juejin.cn/post/6895296590370570247#heading-25) > [2](https://juejin.cn/post/6844903872566132749) > [3](https://my.oschina.net/u/3237413/blog/1528025)
 
 ```
 $ nginx -s reload

@@ -294,13 +294,13 @@ import "antd/dist/antd.less";
     ```
     // 问题1
     fatal - AssertionError [ERR_ASSERTION]: Invalid config keys: dva
-       at Function.validateConfig (/Users/gaoyali-iris/Documents/umi4-project/umi4-react-template/node_modules/@umijs/core/dist/config/config.js:182:31)
-       at Config.getConfig (/Users/gaoyali-iris/Documents/umi4-project/umi4-react-template/node_modules/@umijs/core/dist/config/config.js:60:12)
-       at Service.resolveConfig (/Users/gaoyali-iris/Documents/umi4-project/umi4-react-template/node_modules/@umijs/core/dist/service/service.js:286:97)
-       at Service.run (/Users/gaoyali-iris/Documents/umi4-project/umi4-react-template/node_modules/@umijs/core/dist/service/service.js:235:50)
+       at Function.validateConfig (/Users/自己电脑账户名/Documents/umi4-project/umi4-react-template/node_modules/@umijs/core/dist/config/config.js:182:31)
+       at Config.getConfig (/Users/自己电脑账户名/Documents/umi4-project/umi4-react-template/node_modules/@umijs/core/dist/config/config.js:60:12)
+       at Service.resolveConfig (/Users/自己电脑账户名/Documents/umi4-project/umi4-react-template/node_modules/@umijs/core/dist/service/service.js:286:97)
+       at Service.run (/Users/自己电脑账户名/Documents/umi4-project/umi4-react-template/node_modules/@umijs/core/dist/service/service.js:235:50)
        at processTicksAndRejections (internal/process/task_queues.js:95:5)
-       at async Service.run2 (/Users/gaoyali-iris/Documents/umi4-project/umi4-react-template/node_modules/umi/dist/service/service.js:58:12)
-       at async Object.run (/Users/gaoyali-iris/Documents/umi4-project/umi4-react-template/node_modules/umi/dist/cli/cli.js:55:7) {
+       at async Service.run2 (/Users/自己电脑账户名/Documents/umi4-project/umi4-react-template/node_modules/umi/dist/service/service.js:58:12)
+       at async Object.run (/Users/自己电脑账户名/Documents/umi4-project/umi4-react-template/node_modules/umi/dist/cli/cli.js:55:7) {
     generatedMessage: false,
     code: 'ERR_ASSERTION',
     actual: false,
@@ -838,15 +838,53 @@ $ yarn build
 
 // 启动脚本，为dist提供服务
 $ yarn server
+yarn run v1.22.19
+$ nodemon server --title=UMI4_REACT_TEMPLATE
+[nodemon] 2.0.20
+[nodemon] to restart at any time, enter `rs`
+[nodemon] watching path(s): server/**/* dist/**/*
+[nodemon] watching extensions: js,mjs,json
+[nodemon] starting `node server --title=UMI4_REACT_TEMPLATE`
+加载静态资源::  /Users/gaoyali-iris/Documents/umi4-project/umi4-react-template/dist
+Local: http://localhost:8080
+Network: 172.20.10.2:8080
 
 // 执行bash脚本查看启动服务状态
 $ ps aux | grep -i 'node server --title=UMI4_REACT_TEMPLATE'
 
-gaoyali-iris      4554   0.0  0.2 34421028  29820 s000  S+   11:16上午   0:00.21 /usr/local/bin/node server --title=UMI4_REACT_TEMPLATE
-gaoyali-iris      4597   0.0  0.0 34122844    816 s001  R+   11:17上午   0:00.00 grep --color=auto --exclude-dir=.bzr --exclude-dir=CVS --exclude-dir=.git --exclude-dir=.hg --exclude-dir=.svn --exclude-dir=.idea --exclude-dir=.tox -i node server --title=UMI4_REACT_TEMPLATE
+6987   0.0  0.0 34122844    772 s001  R+   12:02下午   0:00.00 grep --color=auto --exclude-dir=.bzr --exclude-dir=CVS --exclude-dir=.git --exclude-dir=.hg --exclude-dir=.svn --exclude-dir=.idea --exclude-dir=.tox -i node server --title=UMI4_REACT_TEMPLATE
+6973   0.0  0.2 34412836  29072 s000  S+   12:01下午   0:00.19 /usr/local/bin/node server --title=UMI4_REACT_TEMPLATE
 
-// 可以看到当前服务进程为4554
+// 可以看到当前服务进程为6973
 $ ps aux | grep -i 'node server --title=UMI4_REACT_TEMPLATE' | grep -v grep | awk {'print $2'}
 
-4554
+6973
+
+// 杀掉当前进程
+$ kill -9 6973
+
+// 当杀掉进程后nodemon服务控制台打印：
+[nodemon] app crashed - waiting for file changes before starting..
+
+// 再次查询服务状态，则不存在啦
+$ ps aux | grep -i 'node server --title=UMI4_REACT_TEMPLATE'
+
+7069   0.0  0.0 34122844    808 s001  R+   12:03下午   0:00.00 grep --color=auto --exclude-dir=.bzr --exclude-dir=CVS --exclude-dir=.git --exclude-dir=.hg --exclude-dir=.svn --exclude-dir=.idea --exclude-dir=.tox -i node server --title=UMI4_REACT_TEMPLATE
+
+// 更改一下src下代码后，再次yarn build项目到dist (实现: 开两个终端，一个nodemon服务，一个build)
+// nodemon监控到dist目录发生变化，重新启动服务
+[nodemon] restarting due to changes...
+[nodemon] starting `node server --title=UMI4_REACT_TEMPLATE`
+[nodemon] restarting due to changes...
+[nodemon] restarting due to changes...
+[nodemon] restarting due to changes...
+[nodemon] restarting due to changes...
+[nodemon] restarting due to changes...
+[nodemon] restarting due to changes...
+[nodemon] restarting due to changes...
+[nodemon] starting `node server --title=UMI4_REACT_TEMPLATE`
+加载静态资源::  /Users/自己电脑账户名/Documents/umi4-project/umi4-react-template/dist
+Local: http://localhost:8080
+Network: 172.20.10.2:8080
+
 ```

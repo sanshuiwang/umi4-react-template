@@ -849,6 +849,8 @@ $ nodemon server --title=UMI4_REACT_TEMPLATE
 Local: http://localhost:8080
 Network: 172.20.10.2:8080
 
+// 访问 http://localhost:8080/login 登录页面呈现在眼前，并且可以submit到todo页面
+
 // 执行bash脚本查看启动服务状态
 $ ps aux | grep -i 'node server --title=UMI4_REACT_TEMPLATE'
 

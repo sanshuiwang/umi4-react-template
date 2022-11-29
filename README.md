@@ -846,8 +846,8 @@ $ nodemon server --title=UMI4_REACT_TEMPLATE
 [nodemon] watching extensions: js,mjs,json
 [nodemon] starting `node server --title=UMI4_REACT_TEMPLATE`
 加载静态资源::  /Users/gaoyali-iris/Documents/umi4-project/umi4-react-template/dist
-Local: http://localhost:8080
-Network: 172.20.10.2:8080
+Local: http://localhost:8082
+Network: 172.20.10.2:8082
 
 // 访问 http://localhost:8080/login 登录页面呈现在眼前，并且可以submit到todo页面
 
@@ -896,13 +896,76 @@ Network: 172.20.10.2:8080
 > kill 进程 bash 脚本：`shells/stop.sh`
 > 可直接执行`$ bash shells/stop.sh`kill 进程
 
-## nginx 反向代理
+5. nginx 反向代理
 
-> 使用 node 作为前端服务，使用 nginx 作为 node 服务的 API 代理；实现两个容器需要两个端口
-> [1](https://juejin.cn/post/6895296590370570247#heading-25) > [2](https://juejin.cn/post/6844903872566132749) > [3](https://my.oschina.net/u/3237413/blog/1528025)
+> 使用 node 作为前端服务,端口号 8082
+> 使用 nginx 代理 API 请求到 `http://jsonplaceholder.typicode.com/`
+> 使用 nginx 监听 8081，代理到前端 node 的 8082 服务
 
 ```
-$ nginx -s reload
-$ ps ax -o pid,ppid,%cpu,vsz,wchan,command|egrep '(nginx|PID)'
-$ sudo nginx -s quit
+server {
+   listen       8081;
+   server_name  localhost;
+
+   location / {
+      proxy_pass  http://localhost:8082;
+      # root   /Users/gaoyali-iris/Documents/umi4-project/umi4-react-template/dist;
+      # index  index.html index.htm;
+   }
+
+   location /api/ {
+      proxy_pass  http://jsonplaceholder.typicode.com/;
+   }
+}
 ```
+
+- 启动 nginx `$ nginx`; 重启`$ nginx -s reload`;
+
+  > 启动 nginx 有时报错：
+
+  `nginx: [error] open() "/usr/local/var/run/nginx.pid" failed (2: No such file or directory)`
+
+  > `$ cd /usr/local/var/run/` 目录中确实没有 pid 文件
+  > 原因：
+  >
+  > 1. nginx.pid 文件的作用是为了防止启动多个进程副本;
+  > 2. 当主进程(master)存在时，nginx.pid 文件就会存在;
+
+- 查看进程信息`$ ps -ef|grep nginx`; 确实没有 mater&worker 进程
+
+- 执行`$ sudo nginx -c /usr/local/etc/nginx/nginx.conf`指定 nginx 配置;
+
+- 执行`$ cat /usr/local/var/run/nginx.pid`可以看到终端输出 3086【每次重启 nginx 都不一样】
+
+- 查看进程信息`$ ps -ef|grep nginx`;
+
+  > 可以看到有一个 master 得 3086 进程，其余为 worker；可以说明主进程存在时，pid 文件就存在，并且文件内容为主进程 id;当进程关掉后 nginx.pid 文件也就自动删除了，所以需要我们去指定配置文件.
+
+  ```
+  $ ps -ef|grep nginx
+  0  3086     1   0  4:37下午 ??         0:00.00 nginx: master process nginx -c /usr/local/etc/nginx/nginx.conf
+  -2  3087  3086   0  4:37下午 ??         0:00.01 nginx: worker process
+  -2  3088  3086   0  4:37下午 ??         0:00.01 nginx: worker process
+  501  3500  1490   0  5:28下午 ttys001    0:00.00 grep --color=auto --exclude-dir=.bzr --exclude-dir=CVS --exclude-dir=.git --exclude-dir=.hg --exclude-dir=.svn --exclude-dir=.idea --exclude-dir=.tox nginx
+
+  // 执行这个命令，会更清晰
+  $ ps ax -o pid,ppid,%cpu,vsz,wchan,command|egrep '(nginx|PID)'
+  PID  PPID  %CPU      VSZ WCHAN  COMMAND
+  3086     1   0.0 34154148 -      nginx: master process nginx -c /usr/local/etc/nginx/nginx.conf
+  3087  3086   0.0 34191716 -      nginx: worker process
+  3088  3086   0.0 34174308 -      nginx: worker process
+  3827  1490   0.0 34122736 -      egrep --color=auto --exclude-dir=.bzr --exclude-dir=CVS --exclude-dir=.git --exclude-dir=.hg --exclude-dir=.svn --exclude-dir=.idea --exclude-dir=.tox (nginx|PID)
+  ```
+
+- 关闭 nginx`$ sudo nginx -s quit`后, 进程和 pid 文件都不存在啦！
+
+> 参考：
+> [https://zhuanlan.zhihu.com/p/464965616?utm_id=0](https://zhuanlan.zhihu.com/p/464965616?utm_id=0)
+
+> [https://juejin.cn/post/6844903872566132749](https://juejin.cn/post/6844903872566132749)
+
+> [https://my.oschina.net/u/3237413/blog/1528025](https://my.oschina.net/u/3237413/blog/1528025)
+
+> [https://juejin.cn/post/6895296590370570247#heading-25](https://juejin.cn/post/6895296590370570247#heading-25)
+
+6.

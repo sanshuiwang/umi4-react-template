@@ -849,7 +849,7 @@ $ nodemon server --title=UMI4_REACT_TEMPLATE
 Local: http://localhost:8082
 Network: 172.20.10.2:8082
 
-// 访问 http://localhost:8080/login 登录页面呈现在眼前，并且可以submit到todo页面
+// 访问 http://localhost:8082/login 登录页面呈现在眼前，并且可以submit到todo页面
 
 // 执行bash脚本查看启动服务状态
 $ ps aux | grep -i 'node server --title=UMI4_REACT_TEMPLATE'
@@ -874,7 +874,7 @@ $ ps aux | grep -i 'node server --title=UMI4_REACT_TEMPLATE'
 7069   0.0  0.0 34122844    808 s001  R+   12:03下午   0:00.00 grep --color=auto --exclude-dir=.bzr --exclude-dir=CVS --exclude-dir=.git --exclude-dir=.hg --exclude-dir=.svn --exclude-dir=.idea --exclude-dir=.tox -i node server --title=UMI4_REACT_TEMPLATE
 
 // 更改一下src下代码后，再次yarn build项目到dist (实现: 开两个终端，一个nodemon服务，一个build)
-// nodemon监控到dist目录发生变化，重新启动服务
+// nodemon监控到dist目录发生变化，自动重新启动服务
 [nodemon] restarting due to changes...
 [nodemon] starting `node server --title=UMI4_REACT_TEMPLATE`
 [nodemon] restarting due to changes...
@@ -886,10 +886,14 @@ $ ps aux | grep -i 'node server --title=UMI4_REACT_TEMPLATE'
 [nodemon] restarting due to changes...
 [nodemon] starting `node server --title=UMI4_REACT_TEMPLATE`
 加载静态资源::  /Users/自己电脑账户名/Documents/umi4-project/umi4-react-template/dist
-Local: http://localhost:8080
-Network: 172.20.10.2:8080
+Local: http://localhost:8082
+Network: 172.20.10.2:8082
 
 ```
+
+> Tips: 1. 发现 server 启动项目后，network 中访问的 API 一直返回 index.html 的内容；2. 我们可以使用 nginx 进行代理 API 到`http://jsonplaceholder.typicode.com/`
+
+> ![build-api](./readme-source/build-api.jpg 'build-api')
 
 4. 使用 bash 进行 kill 进程
 
@@ -909,8 +913,6 @@ server {
 
    location / {
       proxy_pass  http://localhost:8082;
-      # root   /Users/gaoyali-iris/Documents/umi4-project/umi4-react-template/dist;
-      # index  index.html index.htm;
    }
 
    location /api/ {
@@ -933,7 +935,7 @@ server {
 
 - 查看进程信息`$ ps -ef|grep nginx`; 确实没有 mater&worker 进程
 
-- 执行`$ sudo nginx -c /usr/local/etc/nginx/nginx.conf`指定 nginx 配置;
+- 解决方案：执行`$ sudo nginx -c /usr/local/etc/nginx/nginx.conf`指定 nginx 配置后，会有 pid 和进程信息;
 
 - 执行`$ cat /usr/local/var/run/nginx.pid`可以看到终端输出 3086【每次重启 nginx 都不一样】
 
@@ -968,4 +970,7 @@ server {
 
 > [https://juejin.cn/post/6895296590370570247#heading-25](https://juejin.cn/post/6895296590370570247#heading-25)
 
-6.
+6. 现在访问 nginx 监听的端口号: `http://localhost:8081/login`，我们依然可以打开登录页面展现给用户，点击登录以及跳转到 todo 页面后，查看 network 的 API 可以正常访问啦！
+   ![nginx-localhost](./readme-source/nginx-localhost.jpg 'nginx-localhost')
+
+   ![nginx-localhost-api](./readme-source/nginx-localhost.jpg 'nginx-localhost-api')

@@ -899,7 +899,7 @@ Network: 172.20.10.2:8082
 
 > Tips: 1. 发现 server 启动项目后，network 中访问的 API 一直返回 index.html 的内容；2. 我们可以使用 nginx 进行代理 API 到`http://jsonplaceholder.typicode.com/`
 
-> ![build-api](./readme-source/build-api.jpg 'build-api')
+![build-api](./readme-source/build-api.jpg 'build-api')
 
 4. 使用 bash 进行 kill 进程
 
@@ -977,6 +977,7 @@ server {
 > [https://juejin.cn/post/6895296590370570247#heading-25](https://juejin.cn/post/6895296590370570247#heading-25)
 
 6. 现在访问 nginx 监听的端口号: `http://localhost:8081/login`，我们依然可以打开登录页面展现给用户，点击登录以及跳转到 todo 页面后，查看 network 的 API 可以正常访问啦！
+
    ![nginx-localhost](./readme-source/nginx-localhost.jpg 'nginx-localhost')
 
-   ![nginx-localhost-api](./readme-source/nginx-localhost.jpg 'nginx-localhost-api')
+   ![nginx-localhost-api](./readme-source/nginx-localhost-api.jpg 'nginx-localhost-api')

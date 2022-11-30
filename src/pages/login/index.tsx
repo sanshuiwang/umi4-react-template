@@ -1,37 +1,33 @@
-import { Fragment } from "react";
-import { compose } from "redux";
-import { connect, history } from "umi";
-import { Button, Form, Input, message } from "antd";
+import { Fragment } from 'react';
+import { compose } from 'redux';
+import { connect, history } from 'umi';
+import { Button, Form, Input, message } from 'antd';
 
-import styles from "./index.less";
+import styles from './index.less';
 interface IProps {
   isLoading: boolean;
-  getUsers: Function;
+  getUsers: (arg0: object) => Promise<any>;
 }
 
 function Login(props: IProps) {
   const { getUsers, isLoading } = props;
 
   const onFinish = (values: any) => {
-    console.log("Success:", values);
-    getUsers(values).then((res: object) => {
-      history.push("/todo");
+    console.log('Success:', values);
+    getUsers(values).then(() => {
+      history.push('/todo');
     });
   };
 
-  const onFinishFailed = (errorInfo: any) => {
-    message.error("Login Error!");
+  const onFinishFailed = (errorInfo: object) => {
+    console.error('Login Error!:: ', errorInfo);
+    message.error('Login Error!');
   };
 
   return (
     <Fragment>
       <main className={styles.mainForm}>
-        <Form
-          name="loginForm"
-          onFinish={onFinish}
-          onFinishFailed={onFinishFailed}
-          autoComplete="off"
-        >
+        <Form name="loginForm" onFinish={onFinish} onFinishFailed={onFinishFailed} autoComplete="off">
           <Form.Item>
             <h1 className={styles.loginTitle}>LOGIN</h1>
           </Form.Item>
@@ -40,7 +36,7 @@ function Login(props: IProps) {
             rules={[
               {
                 required: true,
-                message: "Please input your username!",
+                message: 'Please input your username!',
                 max: 50,
               },
             ]}
@@ -53,7 +49,7 @@ function Login(props: IProps) {
             rules={[
               {
                 required: true,
-                message: "Please input your password!",
+                message: 'Please input your password!',
                 max: 50,
               },
             ]}
@@ -73,10 +69,15 @@ function Login(props: IProps) {
 }
 
 const mapStateToProps = ({ loading }: any) => ({
-  isLoading: loading.effects["login/getUsers"] || false,
+  isLoading: loading.effects['login/getUsers'] || false,
 });
 
-const mapDispatchToProps = (dispatch: Function) => ({
+type DispatchType = {
+  type: string;
+  payload: object;
+};
+
+const mapDispatchToProps = (dispatch: ({ type, payload }: DispatchType) => Promise<any>) => ({
   getUsers: (params: object) =>
     dispatch({
       type: `login/getUsers`,

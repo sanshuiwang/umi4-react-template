@@ -697,6 +697,7 @@ $ git commit -am 'style: husky hooks verify commit msg'
  create mode 100755 .husky/commit-msg
 ```
 
+可以看到提交代码随意输入提交信息不通过
 ~~ 提交代码体验 git hooks & verifyCommit 过程动图 ~~
 
 ### prettier
@@ -786,7 +787,8 @@ vscode 需要安装第三方库插件
 
 > [stylelint](https://marketplace.visualstudio.com/items?itemName=stylelint.vscode-stylelint)
 
-~~ 体验 vscode 中 command+s 保存代码后自动格式化 ~~
+可以看到在 extensions 中安装了以上三个插件，我们在 `command+s` 保存代码后自动格式化
+![vscode-commom-s](./readme-source/vscode-commom-s.gif 'vscode-commom-s')
 
 ## 部署脚本 {#section5}
 

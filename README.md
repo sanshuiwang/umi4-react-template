@@ -12,7 +12,7 @@
 
 ---
 
-## umi4 + antd@4 + dva + mock + proxy {#section1}
+<h2 id="section1">umi4 + antd@4 + dva + mock + proxy</h2>
 
 ### 环境准备
 
@@ -27,9 +27,12 @@
 ### 使用 yarn create umi[通过官方工具创建项目](https://umijs.org/docs/tutorials/getting-started#%E5%88%9B%E5%BB%BA%E9%A1%B9%E7%9B%AE)
 
 > 执行过程中会让用户做出资源选择，咱们选择如下：
-> ✔ Pick Umi App Template › Simple App
-> ✔ Pick Npm Client › yarn
-> ✔ Pick Npm Registry › taobao
+
+```
+✔ Pick Umi App Template › Simple App
+✔ Pick Npm Client › yarn
+✔ Pick Npm Registry › taobao
+```
 
 1. 官方 create，帮助开发者初始化创建 git, 用户选择 yarn,taobao
 2. 查看 `package.json` 当前 umi 版本：`"umi": "^4.0.30"`
@@ -43,7 +46,7 @@
 
 ---
 
-## 先简单添加一些 umi 配置项 {#section2}
+<h2 id="section2">先简单添加一些 umi 配置项</h2>
 
 > [配置](https://umijs.org/docs/api/config)
 
@@ -191,7 +194,7 @@ dist
 
 ---
 
-## 编写 Todo List {#section3}
+<h2 id="section3">编写 Todo List</h2>
 
 > 包含：1. 登录 2. 列表
 > 技术：antd@4 + @umijs/plugins + dva + mock + proxy + loading.tsx + 白屏解决方案
@@ -513,7 +516,7 @@ import "antd/dist/antd.less";
 
 ---
 
-## 编码规范 {#section4}
+<h2 id="section4">编码规范</h2>
 
 > eslint + stylelint + husky + lint-stage + verifyCommit/commitlint + prettier + vscode
 > 参考：[编码规范](https://umijs.org/docs/guides/lint#%E7%BC%96%E7%A0%81%E8%A7%84%E8%8C%83)
@@ -791,7 +794,7 @@ vscode 需要安装第三方库插件
 可以看到在 extensions 中安装了以上三个插件，我们在 `command+s` 保存代码后自动格式化
 ![vscode-commom-s](./readme-source/vscode-commom-s.gif 'vscode-commom-s')
 
-## 部署脚本 {#section5}
+<h2 id="section5">部署脚本</h2>
 
 1. 使用 express 启动
 
@@ -924,7 +927,7 @@ server {
 }
 ```
 
-- 启动 nginx `$ nginx`; 重启`$ nginx -s reload`;
+- 启动 nginx `$ nginx`; 重新加载配置`$ nginx -s reload`;
 
   > 启动 nginx 有时报错：
 
@@ -962,7 +965,7 @@ server {
   3827  1490   0.0 34122736 -      egrep --color=auto --exclude-dir=.bzr --exclude-dir=CVS --exclude-dir=.git --exclude-dir=.hg --exclude-dir=.svn --exclude-dir=.idea --exclude-dir=.tox (nginx|PID)
   ```
 
-- 关闭 nginx`$ sudo nginx -s quit`后, 进程和 pid 文件都不存在啦！
+- 退出 nginx`$ sudo nginx -s quit`后, 进程和 pid 文件都不存在啦！
 
 > 参考：
 > [https://zhuanlan.zhihu.com/p/464965616?utm_id=0](https://zhuanlan.zhihu.com/p/464965616?utm_id=0)

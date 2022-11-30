@@ -699,6 +699,7 @@ $ git commit -am 'style: husky hooks verify commit msg'
 
 可以看到提交代码随意输入提交信息不通过
 ~~ 提交代码体验 git hooks & verifyCommit 过程动图 ~~
+![git-hooks-verifyCommit](./readme-source/git-hooks-verifyCommit.gif 'git-hooks-verifyCommit')
 
 ### prettier
 

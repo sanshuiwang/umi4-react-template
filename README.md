@@ -981,3 +981,14 @@ server {
    ![nginx-localhost](./readme-source/nginx-localhost.jpg 'nginx-localhost')
 
    ![nginx-localhost-api](./readme-source/nginx-localhost-api.jpg 'nginx-localhost-api')
+
+7. MacOS brew 指令
+
+服务列表： brew services list
+
+If you installed MySQL through Homebrew, you can start and stop it using the commands:
+
+```
+brew services start mysql
+brew services stop mysql
+```

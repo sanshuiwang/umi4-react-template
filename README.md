@@ -9,6 +9,7 @@
 - [编写 Todo List](#section3)
 - [编码规范](#section4)
 - [部署脚本](#section5)
+- [jenkins 持续集成](#section6)
 
 ---
 
@@ -794,9 +795,11 @@ vscode 需要安装第三方库插件
 可以看到在 extensions 中安装了以上三个插件，我们在 `command+s` 保存代码后自动格式化
 ![vscode-commom-s](./readme-source/vscode-commom-s.gif 'vscode-commom-s')
 
+---
+
 <h2 id="section5">部署脚本</h2>
 
-1. 使用 express 启动
+### 使用 express 启动
 
 > 使用 express 对项目 umi build 后 dist 资源进行启动
 
@@ -805,11 +808,11 @@ vscode 需要安装第三方库插件
 $ yarn add express
 ```
 
-2. 编写服务脚本
+### 编写服务脚本
 
 > 查看 `server/index.js` 编写好的服务脚本
 
-3. 使用 nodemon 启动脚本
+### 使用 nodemon 启动脚本
 
 ```
 // 安装nodemon
@@ -818,7 +821,7 @@ $ yarn add nodemon -D
 // 使用nodemon启动脚本
 $ nodemon server --title=UMI4_REACT_TEMPLATE
 
-// nodemon配置监控文件
+// nodemon配置监控dist&server文件变化，会进行自动重启服务
 // package.json
 "scripts": {
    "build": "umi build --clean",
@@ -834,15 +837,16 @@ $ nodemon server --title=UMI4_REACT_TEMPLATE
 },
 "nodemonConfig": {
    "watch": [
-   "server/*",
-   "dist/*"
+      "server/*",
+      "dist/*"
    ]
 },
 
-// 启动前先build
+// 启动前先build，构建输出到dist文件夹下
 $ yarn build
 
 // 启动脚本，为dist提供服务
+// 访问 http://localhost:8082/login 登录页面呈现在眼前，并且可以submit到todo页面
 $ yarn server
 yarn run v1.22.19
 $ nodemon server --title=UMI4_REACT_TEMPLATE
@@ -851,12 +855,14 @@ $ nodemon server --title=UMI4_REACT_TEMPLATE
 [nodemon] watching path(s): server/**/* dist/**/*
 [nodemon] watching extensions: js,mjs,json
 [nodemon] starting `node server --title=UMI4_REACT_TEMPLATE`
-加载静态资源::  /Users/gaoyali-iris/Documents/umi4-project/umi4-react-template/dist
+加载静态资源::  /Users/自己电脑账户名/Documents/umi4-project/umi4-react-template/dist
 Local: http://localhost:8082
 Network: 172.20.10.2:8082
+```
 
-// 访问 http://localhost:8082/login 登录页面呈现在眼前，并且可以submit到todo页面
+### bash 查看启动的服务状态 & kill 进程 & nodemon 监控 dist 变化
 
+```
 // 执行bash脚本查看启动服务状态
 $ ps aux | grep -i 'node server --title=UMI4_REACT_TEMPLATE'
 
@@ -871,7 +877,7 @@ $ ps aux | grep -i 'node server --title=UMI4_REACT_TEMPLATE' | grep -v grep | aw
 // 杀掉当前进程
 $ kill -9 6973
 
-// 当杀掉进程后nodemon服务控制台打印：
+// 当杀掉进程后，nodemon服务控制台打印：
 [nodemon] app crashed - waiting for file changes before starting..
 
 // 再次查询服务状态，则不存在啦
@@ -894,23 +900,25 @@ $ ps aux | grep -i 'node server --title=UMI4_REACT_TEMPLATE'
 加载静态资源::  /Users/自己电脑账户名/Documents/umi4-project/umi4-react-template/dist
 Local: http://localhost:8082
 Network: 172.20.10.2:8082
-
 ```
 
-> Tips: 1. 发现 server 启动项目后，network 中访问的 API 一直返回 index.html 的内容；2. 我们可以使用 nginx 进行代理 API 到`http://jsonplaceholder.typicode.com/`
+> Tips:
+>
+> 1. 发现 server 启动项目后，network 中访问的 API 一直返回 index.html 的内容；
+> 2. 我们可以使用 nginx 进行代理 API 到`http://jsonplaceholder.typicode.com/`
 
 ![build-api](./readme-source/build-api.jpg 'build-api')
 
-4. 使用 bash 进行 kill 进程
+### 使用 bash 进行 kill 进程
 
 > kill 进程 bash 脚本：`shells/stop.sh`
 > 可直接执行`$ bash shells/stop.sh`kill 进程
 
-5. nginx 反向代理
+### nginx 反向代理
 
 > 使用 node 作为前端服务,端口号 8082
 > 使用 nginx 代理 API 请求到 `http://jsonplaceholder.typicode.com/`
-> 使用 nginx 监听 8081，代理到前端 node 的 8082 服务
+> 使用 nginx 监听 8081，代理到前端 node 的 8082 服务，
 
 ```
 server {
@@ -918,54 +926,56 @@ server {
    server_name  localhost;
 
    location / {
+      # 代理到前端node服务
       proxy_pass  http://localhost:8082;
    }
 
    location /api/ {
+      # 代理API请求
       proxy_pass  http://jsonplaceholder.typicode.com/;
    }
 }
 ```
 
-- 启动 nginx `$ nginx`; 重新加载配置`$ nginx -s reload`;
+1. 启动 nginx `$ nginx`; 重新加载配置`$ nginx -s reload`;
 
-  > 启动 nginx 有时报错：
+> 启动 nginx 有时报错：
 
-  `nginx: [error] open() "/usr/local/var/run/nginx.pid" failed (2: No such file or directory)`
+`nginx: [error] open() "/usr/local/var/run/nginx.pid" failed (2: No such file or directory)`
 
-  > `$ cd /usr/local/var/run/` 目录中确实没有 pid 文件
-  > 原因：
-  >
-  > 1. nginx.pid 文件的作用是为了防止启动多个进程副本;
-  > 2. 当主进程(master)存在时，nginx.pid 文件就会存在;
+> `$ cd /usr/local/var/run/` 目录中确实没有 pid 文件
+> 原因：
+>
+> 1. nginx.pid 文件的作用是为了防止启动多个进程副本;
+> 2. 当主进程(master)存在时，nginx.pid 文件就会存在;
 
-- 查看进程信息`$ ps -ef|grep nginx`; 确实没有 mater&worker 进程
+2. 查看进程信息`$ ps -ef|grep nginx`; 确实没有 mater&worker 进程
 
-- 解决方案：执行`$ sudo nginx -c /usr/local/etc/nginx/nginx.conf`指定 nginx 配置后，会有 pid 和进程信息;
+3. 解决方案：执行`$ sudo nginx -c /usr/local/etc/nginx/nginx.conf`指定 nginx 配置后，会有 pid 和进程信息;
 
-- 执行`$ cat /usr/local/var/run/nginx.pid`可以看到终端输出 3086【每次重启 nginx 都不一样】
+4. 执行`$ cat /usr/local/var/run/nginx.pid`可以看到终端输出 3086【每次重启 nginx 都不一样】
 
-- 查看进程信息`$ ps -ef|grep nginx`;
+5. 查看进程信息`$ ps -ef|grep nginx`;
 
-  > 可以看到有一个 master 得 3086 进程，其余为 worker；可以说明主进程存在时，pid 文件就存在，并且文件内容为主进程 id;当进程关掉后 nginx.pid 文件也就自动删除了，所以需要我们去指定配置文件.
+> 可以看到有一个 master 得 3086 进程，其余为 worker；可以说明主进程存在时，pid 文件就存在，并且文件内容为主进程 id;当进程关掉后 nginx.pid 文件也就自动删除了，所以需要我们去指定配置文件.
 
-  ```
-  $ ps -ef|grep nginx
-  0  3086     1   0  4:37下午 ??         0:00.00 nginx: master process nginx -c /usr/local/etc/nginx/nginx.conf
-  -2  3087  3086   0  4:37下午 ??         0:00.01 nginx: worker process
-  -2  3088  3086   0  4:37下午 ??         0:00.01 nginx: worker process
-  501  3500  1490   0  5:28下午 ttys001    0:00.00 grep --color=auto --exclude-dir=.bzr --exclude-dir=CVS --exclude-dir=.git --exclude-dir=.hg --exclude-dir=.svn --exclude-dir=.idea --exclude-dir=.tox nginx
+```
+$ ps -ef|grep nginx
+0  3086     1   0  4:37下午 ??         0:00.00 nginx: master process nginx -c /usr/local/etc/nginx/nginx.conf
+-2  3087  3086   0  4:37下午 ??         0:00.01 nginx: worker process
+-2  3088  3086   0  4:37下午 ??         0:00.01 nginx: worker process
+501  3500  1490   0  5:28下午 ttys001    0:00.00 grep --color=auto --exclude-dir=.bzr --exclude-dir=CVS --exclude-dir=.git --exclude-dir=.hg --exclude-dir=.svn --exclude-dir=.idea --exclude-dir=.tox nginx
 
-  // 执行这个命令，会更清晰
-  $ ps ax -o pid,ppid,%cpu,vsz,wchan,command|egrep '(nginx|PID)'
-  PID  PPID  %CPU      VSZ WCHAN  COMMAND
-  3086     1   0.0 34154148 -      nginx: master process nginx -c /usr/local/etc/nginx/nginx.conf
-  3087  3086   0.0 34191716 -      nginx: worker process
-  3088  3086   0.0 34174308 -      nginx: worker process
-  3827  1490   0.0 34122736 -      egrep --color=auto --exclude-dir=.bzr --exclude-dir=CVS --exclude-dir=.git --exclude-dir=.hg --exclude-dir=.svn --exclude-dir=.idea --exclude-dir=.tox (nginx|PID)
-  ```
+// 执行这个命令，会更清晰
+$ ps ax -o pid,ppid,%cpu,vsz,wchan,command|egrep '(nginx|PID)'
+PID  PPID  %CPU      VSZ WCHAN  COMMAND
+3086     1   0.0 34154148 -      nginx: master process nginx -c /usr/local/etc/nginx/nginx.conf
+3087  3086   0.0 34191716 -      nginx: worker process
+3088  3086   0.0 34174308 -      nginx: worker process
+3827  1490   0.0 34122736 -      egrep --color=auto --exclude-dir=.bzr --exclude-dir=CVS --exclude-dir=.git --exclude-dir=.hg --exclude-dir=.svn --exclude-dir=.idea --exclude-dir=.tox (nginx|PID)
+```
 
-- 退出 nginx`$ sudo nginx -s quit`后, 进程和 pid 文件都不存在啦！
+6. 退出 nginx`$ sudo nginx -s quit`后, 进程和 pid 文件都不存在啦！
 
 > 参考：
 > [https://zhuanlan.zhihu.com/p/464965616?utm_id=0](https://zhuanlan.zhihu.com/p/464965616?utm_id=0)
@@ -976,13 +986,21 @@ server {
 
 > [https://juejin.cn/post/6895296590370570247#heading-25](https://juejin.cn/post/6895296590370570247#heading-25)
 
-6. 现在访问 nginx 监听的端口号: `http://localhost:8081/login`，我们依然可以打开登录页面展现给用户，点击登录以及跳转到 todo 页面后，查看 network 的 API 可以正常访问啦！
+### nginx 代理后结果展示
 
-   ![nginx-localhost](./readme-source/nginx-localhost.jpg 'nginx-localhost')
+> 现在访问 nginx 监听的端口号: `http://localhost:8081/login`，我们依然可以打开登录页面展现给用户，点击登录以及跳转到 todo 页面后，查看 network 的 API 可以正常访问啦！
 
-   ![nginx-localhost-api](./readme-source/nginx-localhost-api.jpg 'nginx-localhost-api')
+![nginx-localhost](./readme-source/nginx-localhost.jpg 'nginx-localhost')
 
-7. MacOS brew 指令
+![nginx-localhost-api](./readme-source/nginx-localhost-api.jpg 'nginx-localhost-api')
+
+---
+
+<h2 id="section6">jenkins 持续集成</h2>
+
+### 扩展
+
+MacOS brew 指令
 
 服务列表： brew services list
 

@@ -1021,3 +1021,15 @@ brew services start mysql
 // 关闭mysql服务
 brew services stop mysql
 ```
+
+```
+// 解决git push到github出现443问题
+// proxy设置为网络设置中的代理的SOCKS地址端口
+$ cat .gitconfig
+[user]
+	email = 768188667@qq.com
+	name = sanshuiwang
+[http]
+	sslBackend = openssl
+	proxy = socks5://127.0.0.1:15235
+```

@@ -1002,11 +1002,21 @@ PID  PPID  %CPU      VSZ WCHAN  COMMAND
 
 MacOS brew 指令
 
-服务列表： brew services list
-
-If you installed MySQL through Homebrew, you can start and stop it using the commands:
-
 ```
+更新brew，update是更新，upgrade是升级，先更新再升级
+// 更新brew
+brew update
+// 升级brew安装的相关的包，类似git,mysql,python。。。
+brew upgrade
+
+// 查询本机启动的服务
+brew services list
+
+// 在网上看到很多使用service启停mysql的，看到这句话才恍然大悟：
+// The service command is specific to certain Linux distributions. It is not used on macOS.
+// If you installed MySQL through Homebrew, you can start and stop it using the commands:
+// 启动mysql服务
 brew services start mysql
+// 关闭mysql服务
 brew services stop mysql
 ```

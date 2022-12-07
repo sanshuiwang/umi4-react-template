@@ -1003,6 +1003,7 @@ PID  PPID  %CPU      VSZ WCHAN  COMMAND
 MacOS brew 指令
 
 ```
+// 使用Homebrew实现软件包管理
 更新brew，update是更新，upgrade是升级，先更新再升级
 // 更新brew
 brew update

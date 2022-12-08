@@ -10,6 +10,7 @@
 - [编码规范](#section4)
 - [部署脚本](#section5)
 - [jenkins 持续集成](#section6)
+- [扩展](#section7)
 
 ---
 
@@ -997,19 +998,277 @@ PID  PPID  %CPU      VSZ WCHAN  COMMAND
 ---
 
 <h2 id="section6">jenkins 持续集成</h2>
+内容构造中...
+---
 
-### 扩展
+<h2 id="section7">扩展(开发环境)</h2>
+
+> 统一 MacOS 开发环境，作用：
+>
+> 1. 能够在开发时提高开发效率
+> 2. 减少因为开发环境配置不同，导致协同开发产生开发项目配置差异
+
+### Terminal 命令⾏终端 iTerm2
+
+1. 下载(官网)[https://iterm2.com/]
+
+> iTerm2 能够配置出炫酷的 terminal，例如使用高亮来提高指令的辨识度，真香...
+
+### Homebrew
+
+> 官网介绍：macOS（或 Linux）缺失的软件包的管理器
+
+1. (Install Homebrew 官网)[https://brew.sh/]
+
+安装：打开 terminal 终端，执⾏如下命令：
+
+```
+$ /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+```
+
+2. 我们会发现如果没有进行科学上网安装会非常的慢；另外国内如果有同学使用的公司电脑，并且带有安全控制的内部网络会更佳的慢得离谱，甚至安装失败；我们需要对 homebrew 配置加速器
+
+```
+$ echo 'export HOMEBREW_BOTTLE_DOMAIN=https://mirrors.tuna.tsinghua.edu.cn/homebrew-bottles'>> ~/.zshrc
+
+// 重启 zsh 使新镜像源⽣效
+$ source ~/.zshrc
+
+// 现在执行安装命令会发现快很多，但是还是失败啦！
+$ /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+
+// 进入到Taps, 查看有没有homebrew文件夹，没有则创建;创建完进入homebrew文件夹
+$ cd /usr/local/Homebrew/Library/Taps
+$ mkdir homebrew && cd homebrew
+
+// clone homebrew-core
+$ git clone https://mirrors.tuna.tsinghua.edu.cn/git/homebrew/homebrew-core.git
+
+// 替换homebrew源，更换为清华北大蓝翔的镜像
+$ cd "$(brew --repo)"
+$ git remote set-url origin git://mirrors.ustc.edu.cn/brew.git
+
+// 替换homebrew-core源
+$ cd "$(brew --repo)/Library/Taps/homebrew/homebrew-core"
+$ git remote set-url origin git://mirrors.ustc.edu.cn/homebrew-core.git
+
+// 更新brew
+$ brew update
+```
+
+> 就这样我们开心的成功安装 Homebrew 完毕
+
+3. 积累下边 brew 指令，在开发环境配置时可跳过，不需要执行以下指令，不过在未来可能会用到
+
+```
+// 更新brew
+$ brew update
+
+// 升级brew安装的相关的包，类似git,mysql,python。。。
+$ brew upgrade
+
+// 查询本机启动的服务
+brew services list
+```
+
+### 命令⾏终端 shell ⼯具 Oh My ZSH
+
+1. 官网安装(https://ohmyz.sh/#install)[https://ohmyz.sh/#install]
+
+```
+// Install oh-my-zsh via curl
+$ sh -c "$(curl -fsSL https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
+
+OR
+
+// Install oh-my-zsh via wget
+$ sh -c "$(wget https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.sh -O -)"
+```
+
+成功安装后我们可以对 zsh 进行个性化配置:
+
+- 可配置⾮常好⽤的 shell 主题，oh-my-zsh-themes
+- 可配置⾮常好⽤的 shell 插件：oh-my-zsh-plugins
+
+```
+// 配置 zsh
+$ vim ~/.zshrc
+#更改主题
+ZSH_THEME="robbyrussell" 更改为：ZSH_THEME="afowler"
+#修改插件
+plugins=(git) 更改为：plugins=(git zsh-syntax-highlighting zsh-autosuggestions)
+# .bash_profile中有配置内容的话，还需要增加一行：
+source ~/.bash_profile
+
+// 更新配置文件：source .zshrc
+$ source .zshrc
+
+// 报出没有zsh-syntax-highlighting zsh-autosuggestions两个插件；clone这两个插件：
+$ git clone https://github.com/zsh-users/zsh-syntax-highlighting.git ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-syntax-highlighting
+$ git clone https://github.com/zsh-users/zsh-autosuggestions ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-autosuggestions
+
+// 更新配置文件：source .zshrc 发现不再报错找不到插件问题
+$ source .zshrc
+```
+
+配合 afowler 主题，可以获得⼀个这么漂亮的 terminal 界⾯：
+
+![readme-source/oh-zsh-customer.jpg](./readme-source/oh-zsh-customer.jpg 'readme-source/oh-zsh-customer.jpg')
+
+2. 国内情况安装，参考如下：
+
+```
+// 查看当前是否为zsh
+$ echo $SHELL
+
+// 安装zsh
+$ brew install zsh
+
+// 安装wget下载资源的指令
+$ brew install wget
+Error: The following directories are not writable by your user:
+/usr/local/share/zsh
+/usr/local/share/zsh/site-functions
+
+You should change the ownership of these directories to your user.
+  sudo chown -R $(whoami) /usr/local/share/zsh /usr/local/share/zsh/site-functions
+
+And make sure that your user has write permission.
+  chmod u+w /usr/local/share/zsh /usr/local/share/zsh/site-functions
+
+// 执行上边两条chown&chmod命令，对当前系统户授权zsh指令
+$ sudo chown -R $(whoami) /usr/local/share/zsh /usr/local/share/zsh/site-functions
+$ chmod u+w /usr/local/share/zsh /usr/local/share/zsh/site-functions
+
+// 成功安装wget
+$ brew install wget
+
+// 安装 oh-my-zsh
+$ wget https://gitee.com/mirrors/oh-my-zsh/raw/master/tools/install.sh
+
+// 给install.sh添加权限
+$ chmod +x install.sh
+
+// 执行install.sh
+$ ./install.sh
+
+// 如果发现很慢，可以修改为gitee
+$ vim install.sh
+# Default settings
+ZSH=${ZSH:-~/.oh-my-zsh}
+REPO=${REPO:-ohmyzsh/ohmyzsh} 更改为：REPO=${REPO:-mirrors/oh-my-zsh}
+REMOTE=${REMOTE:-https://github.com/${REPO}.git} 更改为：REMOTE=${REMOTE:-https://gitee.com/${REPO}.git}
+BRANCH=${BRANCH:-master}
+
+// 重新执行install.sh
+$ ./install.sh
+
+// 配置 zsh
+$ vim ~/.zshrc
+#更改主题
+ZSH_THEME="robbyrussell" 更改为：ZSH_THEME="afowler"
+#修改插件
+plugins=(git) 更改为：plugins=(git zsh-syntax-highlighting zsh-autosuggestions)
+# .bash_profile中有配置内容的话，还需要增加一行：
+source ~/.bash_profile
+
+// 更新配置文件：source .zshrc
+$ source .zshrc
+
+// 报出没有zsh-syntax-highlighting zsh-autosuggestions两个插件；clone这两个插件：
+$ git clone https://gitee.com/sanshuiwang/zsh-syntax-highlighting.git ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-syntax-highlighting
+$ git clone https://gitee.com/sanshuiwang/zsh-autosuggestions.git ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-autosuggestions
+
+// 更新配置文件：source .zshrc 发现不再报错找不到插件问题
+$ source .zshrc
+```
+
+3. 积累遇到问题，配置开发环境时可跳过
+
+```
+$ l
+zsh: command not found: l
+
+$ vim ....
+zsh: command not found: vim
+
+$ cat ....
+zsh: command not found: cat
+```
+
+> zsh: command not found ？？？ 所有命令在 zsh 终端失效
+
+> 安装 git 时，gitk 指令忽略此方法，所以下边重装 git-gui
+
+```
+// 命令行直接执行，会写入.zshrc最后一行
+$ PATH=/bin:/usr/bin:/usr/local/bin:${PATH}
+
+// 修改.zshrc
+$ vim .zshrc
+最后一行更改
+PATH=/bin:/usr/bin:/usr/local/bin:${PATH}
+export PATH
+```
+
+### 安装 node.js
+
+```
+// 安装最新版node.js
+$ brew install node
+
+// 检查是否安装成功
+$ node -v
+
+// 检查npm是否安装成功
+$ npm -v
+```
+
+选择版本安装：
+
+1. 科学上网：(https://nodejs.org/dist/)[https://nodejs.org/dist/]
+2. 中文网：(https://registry.npmmirror.com/binary.html?path=node/)[https://registry.npmmirror.com/binary.html?path=node/]
+
+### 安装 GIT
+
+```
+// 安装最新版 git
+$ brew install git
+
+// 检查 git 是否安装成功，以出现“git version 版本号”为判断标准
+$ git --version
+
+// 检查 gitk 是否可⽤，如果 gitk ⽆法打开，说明 git 缺乏配置
+$ gitk
+zsh: command not found: gitk
+
+// gitk不能⽤
+// 上边有讲过zsh: command not found XXX问题
+// 查看git版本：
+$ git --version
+
+// 更新git版本：
+$ brew install git
+
+// 查看git安装路径：如果现实的路径是 /usr/bin/git ，那么需要改为local下的路径  /usr/bin/local/git
+$ which git
+
+// 可以直接安装git-gui解决
+$ brew install git-gui
+
+```
+
+### Visual Studio Code
+
+下载(https://code.visualstudio.com/)[https://code.visualstudio.com/]，选择Stabel稳定版本
+
+###
+
+---
 
 MacOS brew 指令
 
 ```
-// 使用Homebrew实现软件包管理,安装Homebrew
-更新brew，update是更新，upgrade是升级，先更新再升级
-// 更新brew
-brew update
-// 升级brew安装的相关的包，类似git,mysql,python。。。
-brew upgrade
-
 // 查询本机启动的服务
 brew services list
 

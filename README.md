@@ -38,7 +38,16 @@
 
 1. 官方 create，帮助开发者初始化创建 git, 用户选择 yarn,taobao
 2. 查看 `package.json` 当前 umi 版本：`"umi": "^4.0.30"`
-3. 创建完毕后，我们可自己手动添加.yarnrc 同时指向淘宝源
+3. 创建完毕后，我们可自己手动添加.yarnrc 同时指向淘宝源(只作用于当前项目);也可以手动切换全局到 taobao
+
+```
+# 使用nrm工具切换淘宝源
+npx nrm use taobao
+
+# 如果之后需要切换回官方源可使用
+npx nrm use npm
+```
+
 4. 推荐[Visual Studio Code](https://code.visualstudio.com/)，vscode 看不到.git 文件夹，项目中手动添加.vscode-->settings.json, 就这样 vscode 展示出.git
    ```json
    "files.exclude": {
@@ -1068,7 +1077,15 @@ $ brew update
 $ brew upgrade
 
 // 查询本机启动的服务
-brew services list
+$ brew services list
+// brew services启动和关闭服务
+// 在网上看到很多使用service启停mysql的，看到这句话才恍然大悟：
+// The service command is specific to certain Linux distributions. It is not used on macOS.
+// If you installed MySQL through Homebrew, you can start and stop it using the commands:
+// 启动mysql服务
+$ brew services start mysql
+// 关闭mysql服务
+$ brew services stop mysql
 ```
 
 ### 命令⾏终端 shell ⼯具 Oh My ZSH
@@ -1231,6 +1248,8 @@ $ npm -v
 
 ### 安装 GIT
 
+1. 使用 brew 安装 git
+
 ```
 // 安装最新版 git
 $ brew install git
@@ -1255,35 +1274,15 @@ $ which git
 
 // 可以直接安装git-gui解决
 $ brew install git-gui
-
 ```
 
-### Visual Studio Code
-
-下载(https://code.visualstudio.com/)[https://code.visualstudio.com/]，选择Stabel稳定版本
-
-###
-
----
-
-MacOS brew 指令
+2. 科学上网： git push 到 github 出现 443
 
 ```
-// 查询本机启动的服务
-brew services list
+// vim .gitconfig配置proxy
+// 设置为本机（网络设置 --> 代理 --> SOCKS地址端口）
+$ vim .gitconfig
 
-// 在网上看到很多使用service启停mysql的，看到这句话才恍然大悟：
-// The service command is specific to certain Linux distributions. It is not used on macOS.
-// If you installed MySQL through Homebrew, you can start and stop it using the commands:
-// 启动mysql服务
-brew services start mysql
-// 关闭mysql服务
-brew services stop mysql
-```
-
-```
-// 解决git push到github出现443问题
-// proxy设置为网络设置中的代理的SOCKS地址端口
 $ cat .gitconfig
 [user]
 	email = 768188667@qq.com
@@ -1292,3 +1291,75 @@ $ cat .gitconfig
 	sslBackend = openssl
 	proxy = socks5://127.0.0.1:15235
 ```
+
+### Visual Studio Code
+
+1. 下载(https://code.visualstudio.com/)[https://code.visualstudio.com/]，选择Stabel稳定版本
+
+2. Terminal 使用 `$ code .` 打开当前项目目录:
+
+   - 方法一：
+   - 确保 Visual Studio Code 移动到应用程序中，而不是在下载中
+   - 配置 vscode 中键盘`common + shift + p`顶部出现输入框，键入`shell command`
+   - 图片位置：./readme-source/code-shell.jpg
+   - ![/readme-source/code-shell.jpg](./readme-source/code-shell.jpg '/readme-source/code-shell.jpg')
+
+   - 方法二
+
+   ```
+   // 删除code在其他位置的配置
+   $ sudo rm /usr/local/bin/code
+   // .zshrc添加：alias code="open -a 'Visual Studio Code'"
+   $ vi .zshrc
+   alias code="open -a 'Visual Studio Code'"
+
+   // 输入完后保存退出，刷新.zshrc
+   $ source .zshrc
+   ```
+
+### yarn
+
+`$ sudo npm install -g yarn`
+
+### 安装 JDK && 多 JDK 切换版本
+
+> Azul 提供的 名为 Zulu 的 OpenJDK 发行版，同时支持 Intel 和 M1 芯片
+
+```
+$ brew tap homebrew/cask-versions
+
+$ brew install --cask zulu11
+
+// 查看安装为JDK11版本
+$ javac -version
+
+// 同时安装JDK8
+$ brew install --cask zulu8
+
+// JDK所在位置
+$ cd /Library/Java/JavaVirtualMachines
+$ l
+zulu-11.jdk
+zulu-8.jdk
+
+// 通过修改.zprofile改变当前环境的JDK版本
+$ vim ~/.zprofile
+export ORACLE_JDK_8_HOME=/Library/Java/JavaVirtualMachines/jdk1.8.0_281.jdk/Contents/Home
+export ZULU_JDK_8_HOME=/Library/Java/JavaVirtualMachines/zulu-8.jdk/Contents/Home
+export ZULU_JDK_11_HOME=/Library/Java/JavaVirtualMachines/zulu-11.jdk/Contents/Home
+
+alias jdk8="export JAVA_HOME=$ORACLE_JDK_8_HOME"
+alias zulujdk8="export JAVA_HOME=$ZULU_JDK_8_HOME"
+alias zulujdk11="export JAVA_HOME=$ZULU_JDK_11_HOME"
+
+export JAVA_HOME=$ZULU_JDK_8_HOME
+export PATH=$PATH:$JAVA_HOME
+
+// 推出保存后，执行
+$ source ~/.zprofile
+
+// 查看安装为JDK8版本
+$ javac -version
+```
+
+---

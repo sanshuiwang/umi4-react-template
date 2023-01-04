@@ -8,8 +8,8 @@
 - [先简单添加一些 umi 配置项](#section2)
 - [编写 Todo List](#section3)
 - [编码规范](#section4)
-- [部署脚本](#section5)
-- [jenkins 持续集成](#section6)
+- [打包部署服务](#section5)
+- [jenkins 持续集成 CI](#section6)
 - [扩展](#section7)
 
 ---
@@ -807,7 +807,7 @@ vscode 需要安装第三方库插件
 
 ---
 
-<h2 id="section5">部署脚本</h2>
+<h2 id="section5">打包部署服务</h2>
 
 ### 使用 express 启动
 
@@ -931,6 +931,7 @@ Network: 172.20.10.2:8082
 > 使用 nginx 监听 8081，代理到前端 node 的 8082 服务，
 
 ```
+# /usr/local/etc/nginx/nginx.conf
 server {
    listen       8081;
    server_name  localhost;
@@ -1007,7 +1008,73 @@ PID  PPID  %CPU      VSZ WCHAN  COMMAND
 ---
 
 <h2 id="section6">jenkins 持续集成</h2>
-内容构造中...
+
+### 安装 jenkins
+
+1. 将 jenkins 安装在我们的 MacOS 上
+
+```
+// MacOS使用brew安装jenkins
+// 安装成功后，启动jenkins端口默认8080
+$ brew install jenkins
+Note: When using launchctl the port will be 8080.
+```
+
+2. 启动 jenkins
+
+```
+// 此种方式启用 jenkins 服务支持后台运行，可以关闭终端工具
+$ brew services start jenkins
+
+// 也可以使用 jenkins 命令来启用 jenkins 服务，但此种方式不支持后台运行，关闭命令行工具，服务自动关闭
+$ /usr/local/opt/jenkins/bin/jenkins --httpListenAddress=127.0.0.1 --httpPort=8080
+```
+
+3. 访问 jenkins：http://localhost:8080/
+
+4. 初次访问需要输入初始化密钥
+
+```
+$ cat /Users/电脑用户名/.jenkins/secrets/initialAdminPassword
+```
+
+5. 初始化密钥成功后，选择推荐插件安装
+
+![jenkins-plugins-install](./readme-source/jenkins-plugins-install.jpg '/readme-source/jenkins-plugins-install')
+
+6. 设置管理员用户名和密码，一定要牢记，重置会很麻烦
+
+7. jenkins 中安装 NodeJS
+
+![jenkins-plugins-mng](./readme-source/jenkins-plugins-mng.jpg '/readme-source/jenkins-plugins-mng.jpg')
+
+![jenkins-install-nodejs](./readme-source/jenkins-install-nodejs.jpg '/readme-source/jenkins-install-nodejs.jpg')
+
+> 安装完也可以执行`$ brew services restart jenkins` 重启 jenkins
+
+### jenkins 新建第一个测试任务：jenkins-test
+
+![jenkins-create-task](./readme-source/jenkins-create-task.jpg '/readme-source/jenkins-create-task.jpg')
+
+![jenkins-test](./readme-source/jenkins-test.jpg '/readme-source/jenkins-test.jpg')
+
+![jenkins-test-config1](./readme-source/jenkins-test-config1.jpg '/readme-source/jenkins-test-config1.jpg')
+
+![jenkins-test-config2](./readme-source/jenkins-test-config2.jpg '/readme-source/jenkins-test-config2.jpg')
+
+执行任务报错
+![jenkins-test-config-error](./readme-source/jenkins-test-config-error.jpg '/readme-source/jenkins-test-config-error.jpg')
+
+node 我们已经安装但是爆出找不到的错误提示，我们需要进行全局配置 node 才可以
+![jenkins-path-config](./readme-source/jenkins-path-config.jpg '/readme-source/jenkins-path-config.jpg')
+
+执行成功
+![jenkins-test-success](./readme-source/jenkins-test-success.jpg '/readme-source/jenkins-test-success.jpg')
+
+### 当前项目集成到 Jenkins
+
+1. 创建任务
+
 ---
 
 <h2 id="section7">扩展(开发环境)</h2>
@@ -1163,6 +1230,7 @@ $ brew install wget
 // 安装 oh-my-zsh
 $ wget https://gitee.com/mirrors/oh-my-zsh/raw/master/tools/install.sh
 
+// 在cd ~下可以看到install.sh文件
 // 给install.sh添加权限
 $ chmod +x install.sh
 

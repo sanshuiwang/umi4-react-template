@@ -5,10 +5,6 @@ const app = express();
 
 const WEEK = 7 * 24 * 60 * 60 * 1000;
 
-function resolveFromRoot(...relativePath) {
-  return path.resolve(__dirname, '..', ...relativePath);
-}
-
 function getIPAdress() {
   const interfaces = require('os').networkInterfaces(); //服务器本机地址
   // eslint-disable-next-line guard-for-in
@@ -21,6 +17,10 @@ function getIPAdress() {
       }
     }
   }
+}
+
+function resolveFromRoot(...relativePath) {
+  return path.resolve(__dirname, '..', ...relativePath);
 }
 
 const staticFilesUrl = resolveFromRoot('dist');

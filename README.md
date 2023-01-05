@@ -1065,10 +1065,11 @@ $ cat /Users/电脑用户名/.jenkins/secrets/initialAdminPassword
 执行任务报错
 ![jenkins-test-config-error](./readme-source/jenkins-test-config-error.jpg '/readme-source/jenkins-test-config-error.jpg')
 
-node 我们已经安装但是爆出找不到的错误提示，我们需要进行全局配置 node 才可以
+我们已经安装 NodeJS，但是爆出找不到的错误提示，我们需要进行全局配置 node 才可以；
+执行`$ echo $PATH`，将环境变量配置进去
 ![jenkins-path-config](./readme-source/jenkins-path-config.jpg '/readme-source/jenkins-path-config.jpg')
 
-执行成功
+执行成功，查看到和本机 node 版本一样
 ![jenkins-test-success](./readme-source/jenkins-test-success.jpg '/readme-source/jenkins-test-success.jpg')
 
 ### 当前项目集成到 Jenkins

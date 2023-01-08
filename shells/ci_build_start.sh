@@ -38,7 +38,7 @@ export PORT=20000
 BUILD_ID=dontKillMe nohup npm run server &
 
 if [ $? -ne 0 ]; then
-    echo "build failed, you need to find why!?!?!?!"
+    echo "run server failed, you need to find error!!!!!!"
     exit -1
 fi
 

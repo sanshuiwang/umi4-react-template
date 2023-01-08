@@ -14,7 +14,6 @@ if  [ -n "$BUILD_NUMBER" ] ;then
 fi
 
 found=$(find . -type d -name "*umi4-react-template*")
-
 echo "Injected found is: " ${found}
 
 bash shells/build.sh
@@ -36,7 +35,12 @@ cd $output
 # Node service set port 20000
 export PORT=20000
 
-BUILD_ID=dontKillMe nohup npm run serve &
+BUILD_ID=dontKillMe nohup npm run server &
+
+if [ $? -ne 0 ]; then
+    echo "build failed, you need to find why!?!?!?!"
+    exit -1
+fi
 
 if  [ ! -n "$githubUserName" ] ;then
     githubUserName="sanshuiwang"

@@ -47,6 +47,8 @@ if [ $? -ne 0 ]; then
     exit -1
 fi
 
+echo "BUILD_ID: " ${BUILD_ID}
+
 if  [ ! -n "$githubUserName" ] ;then
     githubUserName="sanshuiwang"
 fi

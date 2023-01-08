@@ -40,7 +40,7 @@ app.get('*', function (request, response) {
   response.sendFile(routesUrl);
 });
 
-app.listen(port);
-
 console.log('Local: http://localhost:' + port);
 console.log('Network: ' + getIPAdress() + port);
+
+app.listen(port);

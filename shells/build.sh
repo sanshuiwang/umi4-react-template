@@ -1,12 +1,14 @@
 #!/usr/bin/env bash
 
-DIR="$(dirname $( cd "$( dirname "$0"  )" && pwd  ) )"
+DIR="$( pwd )"
+echo "BUILD DIR is: " ${DIR}
 
 # confirm that following operations are being executed in $DIR
 cd $DIR
 
 output="umi4-react-template"
 
+echo "BUILD BUILD_NUMBER is: " ${BUILD_NUMBER}
 if  [ -n "$BUILD_NUMBER" ] ;then
     output="${output}-${BUILD_NUMBER}"
 fi

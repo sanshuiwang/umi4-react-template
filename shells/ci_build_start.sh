@@ -5,6 +5,8 @@ DIR="$(dirname $( cd "$( dirname "$0"  )" && pwd  ) )"
 # confirm that following operations are being executed in $DIR
 cd $DIR
 
+echo "DIR is: " ${DIR}
+
 output="umi4-react-template"
 
 if  [ -n "$BUILD_NUMBER" ] ;then
@@ -31,6 +33,7 @@ fi
 
 cd $output
 
+# Node service set port 20000
 export PORT=20000
 
 BUILD_ID=dontKillMe nohup npm run serve &

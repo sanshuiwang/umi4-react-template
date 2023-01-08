@@ -3,7 +3,7 @@
 NODE_VERSION="$(node -v)"
 echo "node version is: " ${NODE_VERSION}
 NPM_VERSION="$(npm -v)"
-echo "npm version is: " ${NPM_VSESION}
+echo "npm version is: " ${NPM_VERSION}
 
 DIR="$( pwd )"
 echo "CI DIR is: " ${DIR}

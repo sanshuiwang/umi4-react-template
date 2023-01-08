@@ -1,5 +1,10 @@
 #!/usr/bin/env bash
 
+NODE_VERSION=$(node -v)
+echo "NODE VERSION: " ${DIR}
+NPM_VSESION=$(npm -v)
+echo "NPM VSESION: " ${DIR}
+
 DIR="$( pwd )"
 echo "CI DIR is: " ${DIR}
 

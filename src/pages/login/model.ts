@@ -1,18 +1,14 @@
-import { Effect } from "umi";
-import { Reducer } from "redux";
-import { withMixin } from "@/utils/dva";
-import { getUsers } from "@/services/login";
-import { message } from "antd";
-import { AxiosResponse } from "axios";
-import { reap } from "safe-reaper";
-
+import { Effect } from 'umi';
+import { Reducer } from 'redux';
+import { getUsers } from '@/services/login';
+import { AxiosResponse } from 'axios';
 interface IModel {
   namespace?: string;
   state: {
     [propName: string]: any;
   };
   subscriptions: {
-    [propName: string]: Function;
+    [propName: string]: () => any;
   };
   effects: {
     [propName: string]: Effect;
@@ -23,21 +19,18 @@ interface IModel {
 }
 
 const login: IModel = {
-  namespace: "login",
+  namespace: 'login',
   state: {
     userInfo: {},
   },
   subscriptions: {},
   effects: {
-    *getUsers({ payload }: any, { put, call, select }: any) {
+    *getUsers({ payload }: any, { put, call }: any) {
       try {
-        const res: Promise<AxiosResponse<any, any>> = yield call(
-          getUsers,
-          payload
-        );
+        const res: Promise<AxiosResponse<any, any>> = yield call(getUsers, payload);
 
         yield put({
-          type: "updateState",
+          type: 'updateState',
           payload: {
             userInfo: res,
           },

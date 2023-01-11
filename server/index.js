@@ -43,6 +43,5 @@ app.get('*', function (request, response) {
 
 app.listen(port);
 
-const IP = getIPAdress();
 console.log(`Local: http://localhost:${port}`);
-console.log(`Network: http://${IP}:${port}`);
+console.log(`Network: http://${getIPAdress()}:${port}`);

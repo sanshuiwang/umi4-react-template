@@ -1,8 +1,8 @@
 import { defineConfig } from 'umi';
 import path from 'path';
 export default defineConfig({
-  base: '/umi4-react-template/', // 路由中会加入此路径
-  publicPath: '/umi4-react-template/',
+  base: '/umi4/', // 路由中会加入此路径
+  publicPath: '/umi4/',
   npmClient: 'yarn',
   alias: {
     '@': path.resolve(__dirname, 'src'),

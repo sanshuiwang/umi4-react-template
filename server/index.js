@@ -1,12 +1,13 @@
 const express = require('express');
 const path = require('path');
+const os = require('os');
 const port = process.env.PORT || 8082;
 const app = express();
 
 const WEEK = 7 * 24 * 60 * 60 * 1000;
 
 function getIPAdress() {
-  const interfaces = require('os').networkInterfaces(); //服务器本机地址
+  const interfaces = os.networkInterfaces(); //服务器本机地址
   // eslint-disable-next-line guard-for-in
   for (let devName in interfaces) {
     let iface = interfaces[devName];
@@ -42,5 +43,6 @@ app.get('*', function (request, response) {
 
 app.listen(port);
 
+const IP = getIPAdress();
 console.log(`Local: http://localhost:${port}`);
-console.log(`Network: ${getIPAdress()}:${port}`);
+console.log(`Network: http://${IP}:${port}`);

@@ -9,7 +9,7 @@
     "postinstall": "umi setup",
     "prepare": "husky install",
     "server": "node server --title=UMI4_REACT_TEMPLATE",
-    "server:local": "nodemon server --title=UMI4_REACT_TEMPLATE",
+    "server:local": "PORT=20000 nodemon server --title=UMI4_REACT_TEMPLATE",
     "setup": "umi setup",
     "start": "npm run dev:no-mock",
     "umi:g:dva": "umi g dva",

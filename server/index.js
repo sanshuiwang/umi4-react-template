@@ -42,5 +42,5 @@ app.get('*', function (request, response) {
 
 app.listen(port);
 
-console.log('Local: http://localhost:' + port);
-console.log('Network: ' + getIPAdress() + port);
+console.log(`Local: http://localhost:${port}`);
+console.log(`Network: ${getIPAdress()}:${port}`);

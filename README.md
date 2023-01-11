@@ -928,7 +928,7 @@ Network: 172.20.10.2:8082
 
 > 使用 node 作为前端服务,端口号 8082
 > 使用 nginx 代理 API 请求到 `http://jsonplaceholder.typicode.com/`
-> 使用 nginx 监听 8081，代理到前端 node 的 8082 服务，
+> 使用 nginx 监听 8081，代理到前端 node 的 8082 服务
 
 ```
 # /usr/local/etc/nginx/nginx.conf
@@ -948,7 +948,7 @@ server {
 }
 ```
 
-1. 启动 nginx `$ nginx`; 重新加载配置`$ nginx -s reload`;
+1. 启动 nginx `$ nginx`; 重新加载配置 `$ nginx -s reload`;
 
 > 启动 nginx 有时报错：
 
@@ -968,7 +968,9 @@ server {
 
 5. 查看进程信息`$ ps -ef|grep nginx`;
 
-> 可以看到有一个 master 得 3086 进程，其余为 worker；可以说明主进程存在时，pid 文件就存在，并且文件内容为主进程 id;当进程关掉后 nginx.pid 文件也就自动删除了，所以需要我们去指定配置文件.
+> 可以看到有一个 master 得 3086 进程，其余为 worker；
+> 可以说明主进程存在时，pid 文件就存在，并且文件内容为主进程 id；
+> 当进程关掉后 nginx.pid 文件也就自动删除了，所以需要我们去指定配置文件。
 
 ```
 $ ps -ef|grep nginx
@@ -997,9 +999,10 @@ PID  PPID  %CPU      VSZ WCHAN  COMMAND
 
 > [https://juejin.cn/post/6895296590370570247#heading-25](https://juejin.cn/post/6895296590370570247#heading-25)
 
-### nginx 代理后结果展示
+### nginx 代理后成果展示
 
-> 现在访问 nginx 监听的端口号: `http://localhost:8081/login`，我们依然可以打开登录页面展现给用户，点击登录以及跳转到 todo 页面后，查看 network 的 API 可以正常访问啦！
+> 现在访问 nginx 监听的端口号: `http://localhost:8081/login`
+> 我们可以打开登录页面展现给用户，点击登录以及跳转到 todo 页面后，查看 network 的 API 可以正常访问啦！
 
 ![nginx-localhost](./readme-source/nginx-localhost.jpg 'nginx-localhost')
 

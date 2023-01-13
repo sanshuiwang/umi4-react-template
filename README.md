@@ -1057,6 +1057,8 @@ $ cat /Users/电脑用户名/.jenkins/secrets/initialAdminPassword
 
 ### jenkins 新建第一个测试任务：jenkins-test
 
+1. 新建任务&任务配置
+
 ![jenkins-create-task](./readme-source/jenkins-create-task.jpg '/readme-source/jenkins-create-task.jpg')
 
 ![jenkins-test](./readme-source/jenkins-test.jpg '/readme-source/jenkins-test.jpg')
@@ -1065,19 +1067,65 @@ $ cat /Users/电脑用户名/.jenkins/secrets/initialAdminPassword
 
 ![jenkins-test-config2](./readme-source/jenkins-test-config2.jpg '/readme-source/jenkins-test-config2.jpg')
 
-执行任务报错
+2. 执行任务报错
+
 ![jenkins-test-config-error](./readme-source/jenkins-test-config-error.jpg '/readme-source/jenkins-test-config-error.jpg')
 
-我们已经安装 NodeJS，但是爆出找不到的错误提示，我们需要进行全局配置 node 才可以；
-执行`$ echo $PATH`，将环境变量配置进去
+3. 我们已经安装 NodeJS，但是爆出找不到的错误提示，我们需要进行全局配置 node 才可以；执行`$ echo $PATH`，将环境变量配置进去
+
 ![jenkins-path-config](./readme-source/jenkins-path-config.jpg '/readme-source/jenkins-path-config.jpg')
 
 执行成功，查看到和本机 node 版本一样
 ![jenkins-test-success](./readme-source/jenkins-test-success.jpg '/readme-source/jenkins-test-success.jpg')
 
-### 当前项目集成到 Jenkins
+### 不同任务设置不同 NodeJS 版本
 
-1. 创建任务
+1. 安装 NodeJS 插件
+
+![jenkins-nodejs-plugins](./readme-source/jenkins-nodejs-plugins.jpg '/readme-source/jenkins-nodejs-plugins.jpg')
+
+2. 全局工具配置：全局配置可以安装多个版本的 NodeJS，我这里安装有 v14.21.2 和 v19.3.0
+
+![jenkins-config-nodev](./readme-source/jenkins-config-nodev.jpg '/readme-source/jenkins-config-nodev.jpg')
+
+3. jenkins-test 任务内设置 NodeJS 使用的版本
+
+![jenkins-task-config-Node](./readme-source/jenkins-task-config-Node.jpg '/readme-source/jenkins-task-config-Node.jpg')
+
+4. 立即构建 jenkins-test 任务，查看控制台输出 node 版本号为 jenkins 配置的 v19.3.0
+
+![jenkins-task-console](./readme-source/jenkins-task-console.jpg '/readme-source/jenkins-task-console.jpg')
+
+### 当前项目集成到 Jenkins【待补充完善】
+
+1. 创建 umi4-react-template 任务
+
+这一步同 jenkins-test 任务一样，点击'新建任务'，输入 umi4-react-template
+
+2. 配置 github
+
+需要安装 git 插件
+![jenkins-git-plugin](./readme-source/jenkins-git-plugin.jpg '/readme-source/jenkins-git-plugin.jpg')
+
+全局工具配置 git
+![jenkins-github-url](./readme-source/jenkins-github-url.jpg '/readme-source/jenkins-github-url.jpg')
+
+任务配置 git 源代码
+![jenkins-task-config-git](./readme-source/jenkins-task-config-git.jpg '/readme-source/jenkins-task-config-git.jpg')
+
+3. 配置 NodeJS
+
+![jenkins-config-node-umi4](./readme-source/jenkins-config-node-umi4.jpg '/readme-source/jenkins-config-node-umi4.jpg')
+
+4. 配置 SCM 轮询
+
+![jenkins-task-config-SCM](./readme-source/jenkins-task-config-SCM.jpg '/readme-source/jenkins-task-config-SCM.jpg')
+
+5. 配置 SHELL
+
+![jenkins-task-config-shell](./readme-source/jenkins-task-config-shell.jpg '/readme-source/jenkins-task-config-shell.jpg')
+
+5. 执行立即构建，我们可以看到成功的进行了 git 资源拉取，build 和 server 的启动。【控制台输出很多，就不贴图啦】
 
 ---
 

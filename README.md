@@ -856,7 +856,7 @@ $ nodemon server --title=UMI4_REACT_TEMPLATE
 $ yarn build
 
 // 启动脚本，为dist提供服务
-// 访问 http://localhost:8082/login 登录页面呈现在眼前，并且可以submit到todo页面
+// 访问 http://localhost:20000/login 登录页面呈现在眼前，并且可以submit到todo页面
 $ yarn server
 yarn run v1.22.19
 $ nodemon server --title=UMI4_REACT_TEMPLATE
@@ -866,8 +866,8 @@ $ nodemon server --title=UMI4_REACT_TEMPLATE
 [nodemon] watching extensions: js,mjs,json
 [nodemon] starting `node server --title=UMI4_REACT_TEMPLATE`
 加载静态资源::  /Users/自己电脑账户名/Documents/umi4-project/umi4-react-template/dist
-Local: http://localhost:8082
-Network: 172.20.10.2:8082
+Local: http://localhost:20000
+Network: 172.20.10.2:20000
 ```
 
 ### bash 查看启动的服务状态 & kill 进程 & nodemon 监控 dist 变化
@@ -908,8 +908,8 @@ $ ps aux | grep -i 'node server --title=UMI4_REACT_TEMPLATE'
 [nodemon] restarting due to changes...
 [nodemon] starting `node server --title=UMI4_REACT_TEMPLATE`
 加载静态资源::  /Users/自己电脑账户名/Documents/umi4-project/umi4-react-template/dist
-Local: http://localhost:8082
-Network: 172.20.10.2:8082
+Local: http://localhost:20000
+Network: 172.20.10.2:20000
 ```
 
 > Tips:
@@ -926,9 +926,9 @@ Network: 172.20.10.2:8082
 
 ### nginx 反向代理
 
-> 使用 node 作为前端服务,端口号 8082
+> 使用 node 作为前端服务,端口号 20000
 > 使用 nginx 代理 API 请求到 `http://jsonplaceholder.typicode.com/`
-> 使用 nginx 监听 8081，代理到前端 node 的 8082 服务
+> 使用 nginx 监听 8081，代理到前端 node 的 20000 服务
 
 ```
 # /usr/local/etc/nginx/nginx.conf
@@ -938,7 +938,7 @@ server {
 
    location / {
       # 代理到前端node服务
-      proxy_pass  http://localhost:8082;
+      proxy_pass  http://localhost:20000;
    }
 
    location /api/ {
@@ -1042,8 +1042,6 @@ $ cat /Users/电脑用户名/.jenkins/secrets/initialAdminPassword
 ```
 
 5. 初始化密钥成功后，选择推荐插件安装
-
-![jenkins-plugins-install](./readme-source/jenkins-plugins-install.jpg '/readme-source/jenkins-plugins-install')
 
 6. 设置管理员用户名和密码，一定要牢记，重置会很麻烦
 

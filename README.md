@@ -1082,6 +1082,8 @@ $ cat /Users/电脑用户名/.jenkins/secrets/initialAdminPassword
 
 ![jenkins-nodejs-plugins](./readme-source/jenkins-nodejs-plugins.jpg '/readme-source/jenkins-nodejs-plugins.jpg')
 
+> 插件安装完毕，记得执行`$ brew services restart jenkins` 重启 jenkins
+
 2. 全局工具配置：全局配置可以安装多个版本的 NodeJS，我这里安装有 v14.21.2 和 v19.3.0
 
 ![jenkins-config-nodev](./readme-source/jenkins-config-nodev.jpg '/readme-source/jenkins-config-nodev.jpg')
@@ -1094,7 +1096,7 @@ $ cat /Users/电脑用户名/.jenkins/secrets/initialAdminPassword
 
 ![jenkins-task-console](./readme-source/jenkins-task-console.jpg '/readme-source/jenkins-task-console.jpg')
 
-### 当前项目集成到 Jenkins【待补充完善】
+### 当前项目集成到 Jenkins
 
 1. 创建 umi4-react-template 任务
 
@@ -1104,6 +1106,8 @@ $ cat /Users/电脑用户名/.jenkins/secrets/initialAdminPassword
 
 需要安装 git 插件
 ![jenkins-git-plugin](./readme-source/jenkins-git-plugin.jpg '/readme-source/jenkins-git-plugin.jpg')
+
+> 插件安装完毕，记得执行`$ brew services restart jenkins` 重启 jenkins
 
 全局工具配置 git
 ![jenkins-github-url](./readme-source/jenkins-github-url.jpg '/readme-source/jenkins-github-url.jpg')

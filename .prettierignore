@@ -14,4 +14,6 @@
 # 其他不需要格式化
 **/.vscode
 **/.husky
+**/.git
 /readme-source/**
+/nginx
